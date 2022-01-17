@@ -19,7 +19,7 @@ class Adj {
 
 	@Override
 	public String toString() {
-		return "(" + x + " , " + cost + "aaaaaaaaaaaaaa)";
+		return "(" + x + " , " + cost + ")";
 	}
 }
 
