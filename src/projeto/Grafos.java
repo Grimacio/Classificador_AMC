@@ -19,7 +19,7 @@ class Adj {
 
 	@Override
 	public String toString() {
-		return "(" + x + " , " + cost + ")";
+		return "(" + x + " , " + cost + "aaaaaaaaaaaaaa)";
 	}
 }
 
@@ -48,28 +48,28 @@ public class Grafos {
 	}
 	
 	public Floresta max_spanning_tree() {
-		Floresta tree = new Floresta(dim);				//floresta com os nós {0,...,dim} (sem arestas)
-		double[] adj = new double[dim];					//lista onde se atualiza o peso das arestas dos nós adjacentes
-		int[] adj_index = new int[dim];					//o peso adj[x] é o peso entre os nós x em adj e adj_index[x]
-		boolean[] visited = new boolean[dim];				//lista onde os nós prontos ser inseridos na árvore estão true
+		Floresta tree = new Floresta(dim);				//floresta com os nï¿½s {0,...,dim} (sem arestas)
+		double[] adj = new double[dim];					//lista onde se atualiza o peso das arestas dos nï¿½s adjacentes
+		int[] adj_index = new int[dim];					//o peso adj[x] ï¿½ o peso entre os nï¿½s x em adj e adj_index[x]
+		boolean[] visited = new boolean[dim];				//lista onde os nï¿½s prontos ser inseridos na ï¿½rvore estï¿½o true
 		for(int i = 0; i < dim; i = i+1) {
-			adj[i] = Double.MIN_NORMAL;				//atribuir o peso mínimo possivel a todas arestas
-			adj_index[i] = -1;					//atribuir que este peso provém da ligação a um nó impossível (-1)
+			adj[i] = Double.MIN_NORMAL;				//atribuir o peso mï¿½nimo possivel a todas arestas
+			adj_index[i] = -1;					//atribuir que este peso provï¿½m da ligaï¿½ï¿½o a um nï¿½ impossï¿½vel (-1)
 		} 
-		adj[dim-1] = 0;							//atribuir peso 0 à raiz da árvore
-		visited[dim-1] = true;						//sendo a raiz da árvore está pronto para ir para ela (true)
+		adj[dim-1] = 0;							//atribuir peso 0 ï¿½ raiz da ï¿½rvore
+		visited[dim-1] = true;						//sendo a raiz da ï¿½rvore estï¿½ pronto para ir para ela (true)
 		int pivot = dim-1;							
 		for(int j = 1; j < dim; j = j+1) {
-			for(Adj element : graph[pivot]) {			//para todos os nós adjacentes ao pivot
-				if(!visited[element.x] && adj[element.x] < element.cost) {		//se o nó não estiver na árvore e puder ter um peso maior da aresta com o novo pivot
-				adj[element.x] = element.cost;			//alterar para o novo máximo de peso
-				adj_index[element.x] = pivot;			//alterar para que nó forma a nova aresta com máximo peso
+			for(Adj element : graph[pivot]) {			//para todos os nï¿½s adjacentes ao pivot
+				if(!visited[element.x] && adj[element.x] < element.cost) {		//se o nï¿½ nï¿½o estiver na ï¿½rvore e puder ter um peso maior da aresta com o novo pivot
+				adj[element.x] = element.cost;			//alterar para o novo mï¿½ximo de peso
+				adj_index[element.x] = pivot;			//alterar para que nï¿½ forma a nova aresta com mï¿½ximo peso
 				}
 			}
-			int max_index = max_index(adj,visited);     		//obter o índice para o qual existe um máximo peso
-			visited[max_index] = true;				//max_index será o próximo na árvore
-			tree.set_parent(max_index, adj_index[max_index]);	//adicionar relação pai e filho relativamente à mais pesada aresta encontrada
-			pivot = max_index;					//tornar o novo elemento da árvore no novo pivot
+			int max_index = max_index(adj,visited);     		//obter o ï¿½ndice para o qual existe um mï¿½ximo peso
+			visited[max_index] = true;				//max_index serï¿½ o prï¿½ximo na ï¿½rvore
+			tree.set_parent(max_index, adj_index[max_index]);	//adicionar relaï¿½ï¿½o pai e filho relativamente ï¿½ mais pesada aresta encontrada
+			pivot = max_index;					//tornar o novo elemento da ï¿½rvore no novo pivot
 		}
 		if(tree.treeQ()) {
 			return tree;
