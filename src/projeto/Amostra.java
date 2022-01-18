@@ -104,7 +104,7 @@ public class Amostra {
 			s+=","+Arrays.toString(list.get(i));
 		s+="]";
 			
-		return " Amostra = " + s;
+		return " Amostra =  " + s;
 	}
 	
 	public int count(int[] v, int[] w) {
