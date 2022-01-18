@@ -105,7 +105,6 @@ public class Amostra {
 		s+="]";
 			
 		return " Amostra = " + s;
-		//gosto muito de tiiiiiii
 	}
 	
 	public int count(int[] v, int[] w) {
