@@ -37,19 +37,19 @@ public class Bayes {
 	}
 	
 	public double[][] matrixCondRoot(Amostra amostra,int root, double s) {
-		double[][] newMatrix= new double[1][amostra.domain_var(root)];
+		double[][] newMatrix= new double[1][amostra.domain(root)];
 		for(int j=0; j<newMatrix[0].length;j++) {
 			int[] vars= {root};
 			int[] varsValue = {j};
 			int intersecao= amostra.count(vars, varsValue);
-			newMatrix[0][j] = (intersecao+s)/(amostra.length()+s*amostra.domain_var(root));
+			newMatrix[0][j] = (intersecao+s)/(amostra.length()+s*amostra.domain(root));
 			}
 		return newMatrix;
 	}
 	
 	public double[][] matrixCond(Amostra amostra,int son, int daddy, double s) {
 	
-		double[][] newMatrix= new double[amostra.domain_var(daddy)][amostra.domain_var(son)];
+		double[][] newMatrix= new double[amostra.domain(daddy)][amostra.domain(son)];
 		for(int i=0;i<newMatrix.length;i++) {
 			int[] vars= {daddy};
 			int[] varsValue = {i};
@@ -66,7 +66,7 @@ public class Bayes {
 		int[] vars= {son, daddy};
 		int[] varsValue = {sonValue, daddyValue};
 		int intersecao= amostra.count(vars, varsValue);
-		return (intersecao+s)/(daddyCount+s*amostra.domain_var(son));
+		return (intersecao+s)/(daddyCount+s*amostra.domain(son));
 	}
 	
 	public String prob(int[] vector) {

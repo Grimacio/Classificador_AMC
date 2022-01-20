@@ -88,6 +88,7 @@ public class Grafos {
 		return max_index;
 	}
 	
+	
 	@Override
 	public String toString() {
 		return Arrays.deepToString(graph);

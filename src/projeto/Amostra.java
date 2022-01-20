@@ -70,22 +70,7 @@ public class Amostra {
 		} else throw new RuntimeException("Cannot calculate element for index out of bounds");
 	}
 	
-	public int domain(int[] v) {
-		if(v.length == 0) {
-			throw new RuntimeException("Cannot calculate domain for empty vector");
-		}
-		int prod = 1;
-		LinkedList<Integer> visited = new LinkedList<Integer>();
-		for(int i : v) {
-			if(visited.contains(i)) {
-				throw new RuntimeException("Cannot calculate domain for repeated index");
-			} visited.add(i);
-			prod = prod * domain_var(i);
-		}
-		return prod;
-	}
-	
-	public int domain_var(int i) {
+	public int domain(int i) {
 		if(i>=0 && i<length()) {
 			int max = 0;
 			for(int[] x : this.list) {
@@ -132,12 +117,12 @@ public class Amostra {
 	public double[][] matrixAux(int son, int daddy) {
 		//v= vetor com as variaveis que queremos pesquisar; {filho, pai}
 //		LinkedList<LinkedList<LinkedList<Integer>>> newTensor= new LinkedList<LinkedList<LinkedList<Integer>>>();
-		double[][] matrix= new double[domain_var(daddy)+1][domain_var(son)+1];
+		double[][] matrix= new double[domain(daddy)+1][domain(son)+1];
 		
 		for (int[] element : this.list) {
 			matrix[element[daddy]][element[son]]++;
-			matrix[element[daddy]][domain_var(son)]++;
-			matrix[domain_var(daddy)][element[son]]++;
+			matrix[element[daddy]][domain(son)]++;
+			matrix[domain(daddy)][element[son]]++;
 		}
 		
 		return matrix;
