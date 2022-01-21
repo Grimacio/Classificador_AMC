@@ -89,7 +89,8 @@ public class Amostra {
 			s+=","+Arrays.toString(list.get(i));
 		s+="]";
 			
-		return " Amostra = " + s;
+	return " Amostra\n" + s;
+		
 	}
 	
 	public int count(int[] v, int[] w) {
@@ -126,6 +127,11 @@ public class Amostra {
 		}
 		
 		return matrix;
+	}
+	public int dataDim() {
+		if(list!=null) {
+			return this.list.get(0).length;
+		}else return 0;
 	}
 //	public int count2(int[] v, int[] w) {
 //		return matrixAux(v[0], v[1])[w[1]][w[0]];

@@ -15,6 +15,7 @@ public class app {
 
 	private JFrame frame;
 	Amostra A;
+	Grafos G;
 	private JTextArea textArea;
 	/**
 	 * Launch the application.
@@ -45,22 +46,19 @@ public class app {
 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 670, 414);
+		frame.setBounds(100, 100, 455, 320);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
+		textArea.setBounds(22, 56, 409, 207);
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
-
-		
-		
-		textArea.setBounds(1, 1, 597, 127);
 		frame.getContentPane().add(textArea);
 		textArea.setColumns(10);
 		
 		JScrollPane scroll = new JScrollPane(textArea,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroll.setBounds(22, 56, 599, 203);
+		scroll.setBounds(22, 56, 409, 207);
 		//scroll.setSize( 100, 100 );
 		frame.getContentPane().add(scroll);
 		frame.setVisible (true);
@@ -69,19 +67,39 @@ public class app {
 		JFileChooser fileChooser = new JFileChooser();
 		
 		JButton btnTouchMe = new JButton("touch me ;)");
+		btnTouchMe.setBounds(12, 0, 117, 25);
 		btnTouchMe.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 				int r = fileChooser.showOpenDialog((Component)e.getSource());
 				if (r==fileChooser.APPROVE_OPTION){
 					A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
-					textArea.setText(A.toString());					
+					textArea.setText(A.toString().replace("],", "], \n "));					
 				}
 			}
 		});
-				
-			
-		btnTouchMe.setBounds(12, 0, 117, 25);
 		frame.getContentPane().add(btnTouchMe);
+		
+		JButton btnBayes = new JButton("Bayes");
+		btnBayes.setBounds(181, 0, 117, 25);
+		btnBayes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+					if (A==null){
+						textArea.setText("No sample available");
+					}else {
+						if(A.length()==0) {
+							textArea.setText("Empty Sample");
+						}
+						else {
+							G=new Grafos(A.dataDim());
+							textArea.setText(G.toString());	
+						}
+					}
+		
+				
+			}
+		});
+		frame.getContentPane().add(btnBayes);
 	}
 }

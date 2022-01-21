@@ -1,4 +1,4 @@
-package Classes;
+package projeto;
 
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 
-public class AmostraIF {
+public class teste {
 
 	private JFrame frame;
 	Amostra A;
@@ -30,7 +30,7 @@ public class AmostraIF {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AmostraIF window = new AmostraIF();
+					teste window = new teste ();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,7 +42,7 @@ public class AmostraIF {
 	/**
 	 * Create the application.
 	 */
-	public AmostraIF() {
+	public teste() {
 		initialize();
 	}
 
@@ -55,6 +55,8 @@ public class AmostraIF {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
+		textArea.setWrapStyleWord(true);
+		textArea.setLineWrap(true);
 
 
 
@@ -71,8 +73,6 @@ public class AmostraIF {
 		frame.setVisible (true);
 
 		JFileChooser fileChooser = new JFileChooser();
-		
-		JFileChooser fileChooser2 = new JFileChooser();
 
 		JButton btnNewButton = new JButton("Open");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -88,30 +88,12 @@ public class AmostraIF {
 
 		btnNewButton.setBounds(19, 18, 117, 29);
 		frame.getContentPane().add(btnNewButton);
-		
-		
-		
-		JButton btnNewButton_1 = new JButton("Save Object");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			@SuppressWarnings("static-access")
-			public void actionPerformed(ActionEvent e) {
-				int r = fileChooser2.showSaveDialog((Component)e.getSource());
-				if (r == fileChooser2.APPROVE_OPTION){
-					try {
-						 
-			            FileOutputStream fileOut = new FileOutputStream(fileChooser.getSelectedFile().getAbsolutePath());
-			            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-			            objectOut.writeObject(A);
-			            objectOut.close();
-			 
-			        } catch (Exception ex) {
-			            ex.printStackTrace();
-			        }
-				}
-			}
-			
-		});
-		btnNewButton_1.setBounds(325, 209, 95, 43);
-		frame.getContentPane().add(btnNewButton_1);
+
+
+	
+
+
+
+
 	}
 }

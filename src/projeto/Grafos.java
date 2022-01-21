@@ -91,7 +91,7 @@ public class Grafos {
 	
 	@Override
 	public String toString() {
-		return Arrays.deepToString(graph);
+		return dim+" "+ Arrays.deepToString(graph);
 	}
  
 	public static void main(String[] args) {
