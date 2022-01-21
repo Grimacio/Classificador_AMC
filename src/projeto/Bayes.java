@@ -1,32 +1,22 @@
 package projeto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class Bayes {
-	Floresta tree;
-	//Queremos array int[] de LinkedList de LinkedList
-	double[][][] tensor;
-	
-	
+	private Floresta tree;
+	private double[][][] tensor;
+
 	public Bayes( Floresta floresta, Amostra amostra, double s ) {
 		super();
 		if(!floresta.treeQ()) {
 			throw new RuntimeException("This forest is not a tree");
 		}
 		this.tree=floresta;
-		tensor= tensorConstructor(floresta, amostra, s);
-		
-		
-				
+		tensor= tensorConstructor(floresta, amostra, s);		
 	}
 	
 	public double[][][] tensorConstructor(Floresta floresta, Amostra amostra, double s) {
-		double[][][] Tensor = new double[floresta.v.length][][];
-		for (int i = 0; i < floresta.v.length; i++) {
-			int daddy= floresta.v[i];
+		double[][][] Tensor = new double[floresta.size()][][];
+		for (int i = 0; i < floresta.size(); i++) {
+			int daddy= floresta.getForest()[i];
 			if(floresta.isRoot(i)) {
 				Tensor[i]=matrixCondRoot(amostra,i, s);
 			}else {
@@ -70,7 +60,7 @@ public class Bayes {
 	}
 	
 	public String prob(int[] vector) {
-		int[] vTree= this.tree.v;
+		int[] vTree= this.tree.getForest();
 		double prob=1;
 		for (int i = 0; i < vTree.length; i++) {
 			int daddy = vTree[i];
@@ -85,7 +75,6 @@ public class Bayes {
 		
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 //		Bayes a = new Bayes(null, null, 0.5);
 		long startTime = System.nanoTime();
 		Floresta floresta = new Floresta(10);
