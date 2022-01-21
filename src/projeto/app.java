@@ -45,7 +45,7 @@ public class app {
 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 637, 393);
+		frame.setBounds(100, 100, 670, 414);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
@@ -54,13 +54,13 @@ public class app {
 
 		
 		
-		textArea.setBounds(29, 59, 391, 139);
+		textArea.setBounds(1, 1, 597, 127);
 		frame.getContentPane().add(textArea);
 		textArea.setColumns(10);
 		
 		JScrollPane scroll = new JScrollPane(textArea,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroll.setBounds(29, 59, 391, 139);
+		scroll.setBounds(22, 56, 599, 203);
 		//scroll.setSize( 100, 100 );
 		frame.getContentPane().add(scroll);
 		frame.setVisible (true);
