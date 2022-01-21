@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Floresta {
-	int[] v;
+	private int[] v;
 	
 	public Floresta(int n) {
 		super();
@@ -21,7 +21,7 @@ public class Floresta {
 		if(n < v.length && m < v.length && n >=0 && m >= 0) {
 			if(v[m] != n) {
 				v[n] = m;
-			} else throw new RuntimeException("Incesto");
+			} else throw new RuntimeException("Incest");
 		} else throw new RuntimeException("Cannot set parent for index out of bounds");
 	}
 	
@@ -57,6 +57,14 @@ public class Floresta {
 	
 	public boolean isRoot(int i) {
 		return v[i]==-1;
+	}
+	
+	public int size() {
+		return v.length;
+	}
+	
+	public int[] getForest() {
+		return v;
 	}
 	
 	@Override
