@@ -93,6 +93,7 @@ public class app {
 						}
 						else {
 							G=new Grafos(A.dataDim());
+							
 							textArea.setText(G.toString());	
 						}
 					}
