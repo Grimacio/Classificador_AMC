@@ -6,13 +6,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 class Verify {
-	int value;
-	boolean isIt;
+	private int value;
+	private boolean isIt;
 	
 	public Verify(int v) {
 		super();
@@ -42,7 +40,7 @@ class Verify {
 public class Amostra {
 	private ArrayList<int []> list;
 
- //construtor vazio
+//construtor vazio
 	public Amostra() {
 		this.list = new ArrayList<int []>();
 	}
@@ -83,7 +81,7 @@ public class Amostra {
 	
 // adiciona vetor a amostra se tiver as dimensoes certas
 	public void add (int[] v){
-		if(list.isEmpty()&& v.length!=0) {
+		if(list.isEmpty() && v.length!=0) {
 			list.add(v);
 		} else {
 			if(v.length == list.get(0).length) {
@@ -103,9 +101,10 @@ public class Amostra {
 			return list.get(i);
 		} else throw new RuntimeException("Cannot calculate element for index out of bounds");
 	}
-// retorna o num de valores que uma variavel pode assumir nesta amostra, assumindo que varia entre 0 e o seu valor maximo 
+
+// retorna o número de valores que uma variavel pode assumir nesta amostra, assumindo que varia entre 0 e o seu valor maximo 
 	public int domain(int i) {
-		if(i>=0 && i<length()) {
+		if(i>=0 && i<dataDim()) {
 			int max = 0;
 			for(int[] x : this.list) {
 				if(x[i] > max) {
@@ -114,7 +113,7 @@ public class Amostra {
 			} return max+1;
 		} else throw new RuntimeException("Cannot calculate collumn max for index "+i+ " out of bounds");
 	}
-	
+
 	@Override
 	public String toString() {
 		String s="[";
@@ -122,11 +121,10 @@ public class Amostra {
 		for (int i=1; i<list.size();i++)
 			s+=","+Arrays.toString(list.get(i));
 		s+="]";
-			
 	return " Amostra\n" + s;
-		
 	}
-//retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
+
+// retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
 	public int count(int[] v, int[] w) {
 		int contador=0;	
 		int i=0;
@@ -143,11 +141,10 @@ public class Amostra {
 				contador++;
 			}
 			i++;
-			
 		}
 		return contador;
-		
 	}
+
 // recebe duas variaveis e retorna a matriz cujas linhas sao os valores de uma variavel e as colunas os valores da outra, cada entrada ij
 // é a contagem de ocorrencias em que a variavel daddy é i e son é j. A matriz tem uma linha e coluna extras que são o total de ocorrências 
 // em que daddy é i (coluna) e son é j (linha)
@@ -158,7 +155,6 @@ public class Amostra {
 			matrix[element[daddy]][domain(son)]++;
 			matrix[domain(daddy)][element[son]]++;
 		}
-		
 		return matrix;
 	}
 	
@@ -166,9 +162,8 @@ public class Amostra {
 	public int dataDim() {
 		if(list!=null) {
 			return this.list.get(0).length;
-		}else return 0;
+		}else throw new RuntimeException("Cannot calculate data dimmension for not existent sample");
 	}
-	
 	
 //calcula a informaçao mutua entre duas variaveis, recebendo a matriz de contagens das interseçoes e total
 	public double mutualInfo(double[][] matrix) {
@@ -206,10 +201,10 @@ public class Amostra {
 //		amostra.add(b);
 //		amostra.add(c);
 //		System.out.println(amostra);
-		int[] v= {0,1,2,3,4,5,6,7,8,9,10};
-		int[] w= {0,0,1,0,1,0,1,2,2,2,1};
-		int[] x= {0,1};
-		int[] z= {0,1};
+//		int[] v= {0,1,2,3,4,5,6,7,8,9,10};
+//		int[] w= {0,0,1,0,1,0,1,2,2,2,1};
+//		int[] x= {0,1};
+//		int[] z= {0,1};
 //		int[] a= {5};
 //		long startTime = System.nanoTime();
 //		System.out.println(amostra.count(v,w));
@@ -224,4 +219,3 @@ public class Amostra {
 //		System.out.println(amostra.count(x,z));	
 	}
 }
-
