@@ -5,29 +5,34 @@ import java.util.LinkedList;
 
 
 class Adj {
-	int x;
-	double cost;
+	private int node;
+	private double cost;
 	
-	public Adj(int x, double cost) {
+	public Adj(int node, double cost) {
 		super();
-		this.x = x;
+		this.node = node;
 		this.cost = cost;
 	}
 	
-	public int x() {
-		return this.x;
+	public int getNode() {
+		return node;
+	}
+	
+	public double getCost() {
+		return cost;
 	}
 
 	@Override
 	public String toString() {
-		return "(" + x + " , " + cost + ")";
+		return "(" + node + " , " + cost + ")";
 	}
 }
 
 public class Grafos {
-	LinkedList<Adj>[] graph;
-	int dim;
+	private LinkedList<Adj>[] graph;
+	private int dim;
 	
+	@SuppressWarnings("unchecked")
 	public Grafos(int n) {
 		super();
 		if(n >= 0) {
@@ -62,9 +67,9 @@ public class Grafos {
 		int pivot = dim-1;							
 		for(int j = 1; j < dim; j = j+1) {
 			for(Adj element : graph[pivot]) {			//para todos os n�s adjacentes ao pivot
-				if(!visited[element.x] && adj[element.x] < element.cost) {		//se o n� n�o estiver na �rvore e puder ter um peso maior da aresta com o novo pivot
-				adj[element.x] = element.cost;			//alterar para o novo m�ximo de peso
-				adj_index[element.x] = pivot;			//alterar para que n� forma a nova aresta com m�ximo peso
+				if(!visited[element.getNode()] && adj[element.getNode()] < element.getCost()) {		//se o n� n�o estiver na �rvore e puder ter um peso maior da aresta com o novo pivot
+				adj[element.getNode()] = element.getCost();			//alterar para o novo m�ximo de peso
+				adj_index[element.getNode()] = pivot;			//alterar para que n� forma a nova aresta com m�ximo peso
 				}
 			}
 			int max_index = max_index(adj,visited);     		//obter o �ndice para o qual existe um m�ximo peso
