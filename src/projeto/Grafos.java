@@ -3,6 +3,7 @@ package projeto;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+
 class Adj {
 	int x;
 	double cost;
@@ -91,6 +92,13 @@ public class Grafos {
 	@Override
 	public String toString() {
 		return dim+" "+ Arrays.deepToString(graph);
+	}
+	
+	
+	
+		
+	public void graphBuilder() {
+		
 	}
  
 	public static void main(String[] args) {
