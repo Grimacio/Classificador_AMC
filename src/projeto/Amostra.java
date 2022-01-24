@@ -15,7 +15,7 @@ class Verify {
 	public Verify(int v) {
 		super();
 		value= v;
-		isIt= false;
+		isIt= true;
 	}
 	
 	public boolean isAlone() {
@@ -33,7 +33,11 @@ class Verify {
 	public void setIsIt(boolean isIt) {
 		this.isIt = isIt;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Verify [value=" + value + ", isIt=" + isIt + "]";
+	}
 	
 }
 
@@ -166,56 +170,39 @@ public class Amostra {
 	}
 	
 //calcula a informaçao mutua entre duas variaveis, recebendo a matriz de contagens das interseçoes e total
-	public double mutualInfo(double[][] matrix) {
+	public double mutualInfo(int x, int y) {
+		double[][] matrix = matrixAux(x,y);
 		double soma=0;
 		double dim= length();
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix[0].length; j++) {
 				if(j!=matrix[0].length-1 && i!= matrix.length-1) {
-					soma+=(matrix[i][j]/dim) * Math.log(dim*(matrix[i][j]/(matrix[i][matrix[0].length-1]* matrix[matrix.length-1][j])));
+					if (matrix[i][j]!=0) {
+						soma+= (matrix[i][j]/dim) * Math.log(dim*(matrix[i][j]/(matrix[i][matrix[0].length-1]* matrix[matrix.length-1][j])));
+					}
 				}
 			}
 		}
 		return soma;
 	}
 	
-//	public Verify[] maria(Amostra a) {
-//		Verify[] res = new Verify[dataDim()];
-//		for (int i=0; i< res.length; i++) {
-//			res[i].setValue(a.list.get(0)[i]);
-//		}
-//		for (int i=1; i<length(); i++) {
-//			
-//		}
-//	}
-
-	
-	public static void main(String[] args) {
-		Amostra amostra = new Amostra("bcancer.csv");
-//		int[] u= {1,2,3,4,5,6,7,8,9,10,11};
-//		amostra.add(u);
-//		int[] a= {0,0,1,2};
-//		int[] b= {1,0,1,1};
-//		int[] c= {0,0,1,0};
-//		amostra.add(a);
-//		amostra.add(b);
-//		amostra.add(c);
-//		System.out.println(amostra);
-//		int[] v= {0,1,2,3,4,5,6,7,8,9,10};
-//		int[] w= {0,0,1,0,1,0,1,2,2,2,1};
-//		int[] x= {0,1};
-//		int[] z= {0,1};
-//		int[] a= {5};
-//		long startTime = System.nanoTime();
-//		System.out.println(amostra.count(v,w));
-//		long endTime = System.nanoTime();
-//		System.out.println(endTime-startTime);
-//		long startTime2=System.nanoTime();
-//		System.out.println(amostra.count_mau(v,w));
-//		long endTime2 = System.nanoTime();
-//		System.out.println(endTime2-startTime2);
-		System.out.println(Arrays.deepToString(amostra.matrixAux(1,1)));
-		System.out.println(amostra.mutualInfo(amostra.matrixAux(1,1)));
-//		System.out.println(amostra.count(x,z));	
+// retorna as variáveis onde existe apenas um único valor ao longo de toda a amostra
+	public boolean[] Alone() {
+		Verify[] res = new Verify[dataDim()];
+		boolean[] Alone = new boolean[dataDim()];
+		for (int i=0; i< res.length; i++) {
+			res[i] = new Verify(list.get(0)[i]);
+			Alone[i] = true;
+		}
+		for (int i=1; i<length(); i++) {
+			for (int j=0; j< res.length; j++) {
+				if(res[j].isAlone()) {
+					if(res[j].getValue() != element(i)[j]) {
+						res[j].setIsIt(false);
+						Alone[j] = false;
+					}
+				}
+			}
+		}
+		return Alone;
 	}
-}
