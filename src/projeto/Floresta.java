@@ -7,6 +7,7 @@ import java.util.Queue;
 public class Floresta {
 	private int[] v;
 	
+//constrói uma floresta com n nós independentes
 	public Floresta(int n) {
 		super();
 		if(n >= 0) {
@@ -17,6 +18,7 @@ public class Floresta {
 		} else throw new RuntimeException("Cannot construct forest from negative size");
 	}
 	
+//recebe dois nós e torna m o pai de n
 	public void set_parent(int n, int m) {
 		if(n < v.length && m < v.length && n >=0 && m >= 0) {
 			if(v[m] != n) {
@@ -25,6 +27,7 @@ public class Floresta {
 		} else throw new RuntimeException("Cannot set parent for index out of bounds");
 	}
 	
+//recebe uma floresta e verifica se essa floresta representa uma árvore
 	public boolean treeQ() {
 		boolean floresta = false;
 		int daddy = -1;
@@ -55,14 +58,17 @@ public class Floresta {
 		return visited;
 	}
 	
+//transforma o nó i na raiz de uma árvore
 	public boolean isRoot(int i) {
 		return v[i]==-1;
 	}
 	
+//retorna o tamanho da floresta
 	public int size() {
 		return v.length;
 	}
 	
+//retorna a floresta
 	public int[] getForest() {
 		return v;
 	}
@@ -71,16 +77,3 @@ public class Floresta {
 	public String toString() {
 		return "Floresta [v=" + Arrays.toString(v) + "]";
 	}
-	
-
-	public static void main(String[] args) {
-		Floresta floresta = new Floresta(6);
-		floresta.set_parent(0, 1);
-		floresta.set_parent(2, 1);
-		floresta.set_parent(3, 2);
-		floresta.set_parent(4, 3);
-		floresta.set_parent(5, 2);
-		System.out.println(floresta);
-		System.out.println(floresta.treeQ());
-	}
-}
