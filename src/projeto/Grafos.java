@@ -3,7 +3,6 @@ package projeto;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-
 class Adj {
 	private int node;
 	private double cost;
@@ -32,6 +31,7 @@ public class Grafos {
 	private LinkedList<Adj>[] graph;
 	private int dim;
 	
+//constroi um grafo com nos
 	@SuppressWarnings("unchecked")
 	public Grafos(int n) {
 		super();
@@ -44,6 +44,7 @@ public class Grafos {
 		} else throw new RuntimeException("Graph: Cannot create graph with negative dimensions");
 	}
 	
+//adiciona no grafo uma aresta com um certo custo entre dois nós
 	public void add_edge(int x, int y, double cost) {
 		if(x < dim && y < dim && x >= 0 && y >= 0) {
 			Adj n = new Adj(y,cost);
@@ -53,19 +54,21 @@ public class Grafos {
 		} else throw new RuntimeException("Graph: Cannot add edge with dimensions out of bounds");
 	}
 	
+//transforma um grafo numa árvore com o maior peso possível nas suas arestas
 	public Floresta max_spanning_tree() {
-		Floresta tree = new Floresta(dim);				//floresta com os n�s {0,...,dim} (sem arestas)
-		double[] adj = new double[dim];					//lista onde se atualiza o peso das arestas dos n�s adjacentes
-		int[] adj_index = new int[dim];					//o peso adj[x] � o peso entre os n�s x em adj e adj_index[x]
-		boolean[] visited = new boolean[dim];				//lista onde os n�s prontos ser inseridos na �rvore est�o true
+		Floresta tree = new Floresta(dim);				//floresta com os nos {0,...,dim} (sem arestas)
+		double[] adj = new double[dim];					//lista onde se atualiza o peso das arestas dos nos adjacentes
+		int[] adj_index = new int[dim];					//o peso adj[x] o o peso entre os nos x em adj e adj_index[x]
+		boolean[] visited = new boolean[dim];				//lista onde os nos prontos ser inseridos na arvore estao true
 		for(int i = 0; i < dim; i = i+1) {
-			adj[i] = Double.MIN_NORMAL;				//atribuir o peso m�nimo possivel a todas arestas
-			adj_index[i] = -1;					//atribuir que este peso prov�m da liga��o a um n� imposs�vel (-1)
+			adj[i] = -Integer.MAX_VALUE;							//atribuir o peso minimo possivel a todas arestas
+			adj_index[i] = -1;					//atribuir que este peso provem da ligaçao a um n� imposs�vel (-1)
 		} 
 		adj[dim-1] = 0;							//atribuir peso 0 � raiz da �rvore
 		visited[dim-1] = true;						//sendo a raiz da �rvore est� pronto para ir para ela (true)
 		int pivot = dim-1;							
 		for(int j = 1; j < dim; j = j+1) {
+			
 			for(Adj element : graph[pivot]) {			//para todos os n�s adjacentes ao pivot
 				if(!visited[element.getNode()] && adj[element.getNode()] < element.getCost()) {		//se o n� n�o estiver na �rvore e puder ter um peso maior da aresta com o novo pivot
 				adj[element.getNode()] = element.getCost();			//alterar para o novo m�ximo de peso
@@ -77,13 +80,14 @@ public class Grafos {
 			tree.set_parent(max_index, adj_index[max_index]);	//adicionar rela��o pai e filho relativamente � mais pesada aresta encontrada
 			pivot = max_index;					//tornar o novo elemento da �rvore no novo pivot
 		}
+
 		if(tree.treeQ()) {
 			return tree;
 		} else throw new RuntimeException("Max Tree: Impossible return a tree");
 	}
 
 	private int max_index(double[] adj, boolean[] visited) {
-		double max = Double.MIN_NORMAL;
+		double max = -Integer.MAX_VALUE;
 		int max_index = 0;
 		for(int i = 0; i < dim; i = i+1) {
 			if(!visited[i] && adj[i] > max) {
@@ -93,25 +97,24 @@ public class Grafos {
 		}
 		return max_index;
 	}
-		
+	
+//a partir de uma amostra adiciona no grafo todas as arestas possíveis
+	public void build(Amostra amostra) {
+		boolean[] alone = amostra.Alone();
+		for (int i = 0; i < alone.length; i++) {
+			if (alone[i] == false) {
+				for (int j = i+1; j < alone.length; j++) {
+					add_edge(i, j, amostra.mutualInfo(i,j));
+				}
+			} else {
+				for (int j = i+1; j < alone.length; j++) {
+					add_edge(i, j, 0);
+				}
+			}
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return dim+" "+ Arrays.deepToString(graph);
 	}
-	
-	
-	
-		
-	public void graphBuilder() {
-		
-	}
- 
-	public static void main(String[] args) {
-		Grafos m = new Grafos(5);
-		int[][] edges = {{0,1,2},{0,3,6},{1,3,8},{1,2,3},{1,4,5},{2,4,7},{3,4,9}};
-		for(int[] x : edges)
-			m.add_edge(x[0],x[1],x[2]); 
-		System.out.println(m);
-		System.out.println(m.max_spanning_tree());
-	}
-}
