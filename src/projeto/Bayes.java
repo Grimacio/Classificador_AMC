@@ -1,10 +1,13 @@
 package projeto;
 
+import java.util.Arrays;
+
 public class Bayes {
 	private Floresta tree;
 	private double[][][] tensor;
 
-	public Bayes( Floresta floresta, Amostra amostra, double s ) {
+//cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem
+	public Bayes(Floresta floresta, Amostra amostra, double s) {
 		super();
 		if(!floresta.treeQ()) {
 			throw new RuntimeException("This forest is not a tree");
@@ -13,6 +16,7 @@ public class Bayes {
 		tensor= tensorConstructor(floresta, amostra, s);		
 	}
 	
+//cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem	
 	public double[][][] tensorConstructor(Floresta floresta, Amostra amostra, double s) {
 		double[][][] Tensor = new double[floresta.size()][][];
 		for (int i = 0; i < floresta.size(); i++) {
@@ -26,7 +30,7 @@ public class Bayes {
 		return Tensor;
 	}
 	
-	public double[][] matrixCondRoot(Amostra amostra,int root, double s) {
+	private double[][] matrixCondRoot(Amostra amostra,int root, double s) {
 		double[][] newMatrix= new double[1][amostra.domain(root)];
 		for(int j=0; j<newMatrix[0].length;j++) {
 			int[] vars= {root};
@@ -37,7 +41,7 @@ public class Bayes {
 		return newMatrix;
 	}
 	
-	public double[][] matrixCond(Amostra amostra,int son, int daddy, double s) {
+	private double[][] matrixCond(Amostra amostra,int son, int daddy, double s) {
 	
 		double[][] newMatrix= new double[amostra.domain(daddy)][amostra.domain(son)];
 		for(int i=0;i<newMatrix.length;i++) {
@@ -52,13 +56,15 @@ public class Bayes {
 		return newMatrix;
 	}
 	
-	public double DFO(Amostra amostra, int son, int daddy, int sonValue, int daddyValue, int daddyCount, double s){
+	private double DFO(Amostra amostra, int son, int daddy, int sonValue, int daddyValue, int daddyCount, double s){
 		int[] vars= {son, daddy};
 		int[] varsValue = {sonValue, daddyValue};
 		int intersecao= amostra.count(vars, varsValue);
 		return (intersecao+s)/(daddyCount+s*amostra.domain(son));
 	}
 	
+	
+// WHAT IS THIS
 	public String prob(int[] vector) {
 		int[] vTree= this.tree.getForest();
 		double prob=1;
@@ -72,35 +78,9 @@ public class Bayes {
 		}
 		return (prob*100+"%");
 	}
-		
 
-	public static void main(String[] args) {
-//		Bayes a = new Bayes(null, null, 0.5);
-		long startTime = System.nanoTime();
-		Floresta floresta = new Floresta(10);
-		floresta.set_parent(0, 1);
-		floresta.set_parent(2, 1);
-		floresta.set_parent(3, 2);
-		floresta.set_parent(4, 3);
-		floresta.set_parent(5, 2);
-		floresta.set_parent(6, 5);
-		floresta.set_parent(7, 5);
-		floresta.set_parent(8, 7);
-		floresta.set_parent(9, 1);
-		Amostra amostra = new Amostra("bcancer.csv");
-		Bayes rede = new Bayes(floresta, amostra, 0.5);
-//		int[][] mat= {{1,2,3},{4,5,6}};
-//		int[][] mat2= {{1,2,3,4},{4,5,6,8}};
-//		int[] vars= {1};
-//		int[] varsValue = {0};
-//		System.out.println(Arrays.deepToString(rede.matrixCond(amostra, 5,2,0.5)));
-		int[] teste = {0,0,0,0,1,0,0,1,0,0,0};
-		System.out.println(rede.prob(teste));
-		long endTime = System.nanoTime();
-		System.out.println((endTime-startTime)/1000000 + " mili");
-		
-	
-		
+	@Override
+	public String toString() {
+		return "Bayes ["+ tree + ", tensor=" + Arrays.deepToString(tensor) + "]";
 	}
-
 }
