@@ -85,7 +85,11 @@ public class Amostra implements Serializable{
 		}
 	}
 	
-//adiciona um vetor a amostra se tiver as dimensoes certas
+public ArrayList<int[]> getList() {
+		return list;
+	}
+
+	//adiciona um vetor a amostra se tiver as dimensoes certas
 	public void add (int[] v){
 		if(list.isEmpty() && v.length!=0) {
 			list.add(v);

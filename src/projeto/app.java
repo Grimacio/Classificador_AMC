@@ -128,13 +128,14 @@ public class app implements Serializable{
 				FileOutputStream fout;
 				
 				try {
-					fout = new FileOutputStream
-							(fileChooser2.getSelectedFile().getAbsolutePath() + "/A", true);
-					ObjectOutputStream oos = new ObjectOutputStream(fout);
-					oos.writeObject(A);
-					oos.close();
-					fout.close();
-				
+					int r = fileChooser2.showOpenDialog((Component)e.getSource());
+					if (r==fileChooser2.APPROVE_OPTION){
+						fout = new FileOutputStream(fileChooser2.getSelectedFile().getAbsolutePath(), true);
+						ObjectOutputStream oos = new ObjectOutputStream(fout);
+						oos.writeObject(A.getList());
+						oos.close();
+						fout.close();
+					}
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

@@ -1,5 +1,6 @@
 package projeto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -119,3 +120,4 @@ public class Grafos implements Serializable{
 	public String toString() {
 		return dim+" "+ Arrays.deepToString(graph);
 	}
+}
