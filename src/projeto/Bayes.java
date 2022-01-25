@@ -32,6 +32,10 @@ public class Bayes implements Serializable{
 		return Tensor;
 	}
 	
+	public double[][][] getTensor() {
+		return tensor;
+	}
+
 	private double[][] matrixCondRoot(Amostra amostra,int root, double s) {
 		double[][] newMatrix= new double[1][amostra.domain(root)];
 		for(int j=0; j<newMatrix[0].length;j++) {

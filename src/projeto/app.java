@@ -130,9 +130,9 @@ public class app implements Serializable{
 				try {
 					int r = fileChooser2.showOpenDialog((Component)e.getSource());
 					if (r==fileChooser2.APPROVE_OPTION){
-						fout = new FileOutputStream(fileChooser2.getSelectedFile().getAbsolutePath(), true);
+						fout = new FileOutputStream(fileChooser2.getSelectedFile().getAbsolutePath() + ".csv.ser", true);
 						ObjectOutputStream oos = new ObjectOutputStream(fout);
-						oos.writeObject(A.getList());
+						oos.writeObject(R.getTensor());
 						oos.close();
 						fout.close();
 					}
