@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -41,15 +42,16 @@ class Verify {
 	
 }
 
-public class Amostra {
+public class Amostra implements Serializable{
+	private static final long serialVersionUID=1L;
 	private ArrayList<int []> list;
 
-//construtor vazio
+//constroi uma amostra vazia
 	public Amostra() {
 		this.list = new ArrayList<int []>();
 	}
 	
-// construtor com ficheiro .csv
+//constroi uma amostra apartir de um ficheiro .csv
 	public Amostra(String csvFile) {
 		this.list = new ArrayList<int []>();;
 
@@ -83,7 +85,7 @@ public class Amostra {
 		}
 	}
 	
-// adiciona vetor a amostra se tiver as dimensoes certas
+//adiciona um vetor a amostra se tiver as dimensoes certas
 	public void add (int[] v){
 		if(list.isEmpty() && v.length!=0) {
 			list.add(v);
@@ -125,7 +127,7 @@ public class Amostra {
 		for (int i=1; i<list.size();i++)
 			s+=","+Arrays.toString(list.get(i));
 		s+="]";
-	return " Amostra\n" + s;
+	return s;
 	}
 
 // retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
@@ -206,3 +208,4 @@ public class Amostra {
 		}
 		return Alone;
 	}
+}
