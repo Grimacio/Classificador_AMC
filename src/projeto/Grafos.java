@@ -27,7 +27,8 @@ class Adj {
 	}
 }
 
-public class Grafos {
+public class Grafos implements Serializable{
+	private static final long serialVersionUID=1L;
 	private LinkedList<Adj>[] graph;
 	private int dim;
 	
