@@ -4,19 +4,31 @@ import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.awt.event.ActionEvent;
 import javax.swing.JFileChooser;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
-public class app {
+
+public class app implements Serializable{
+	private static final long serialVersionUID=1L;
 
 	private JFrame frame;
 	Amostra A;
 	Grafos G;
+	Bayes R;
 	private JTextArea textArea;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -46,11 +58,11 @@ public class app {
 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 455, 320);
+		frame.setBounds(100, 100, 461, 320);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
-		textArea.setBounds(22, 56, 409, 207);
+		textArea.setBounds(1, 1, 369, 185);
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
 		frame.getContentPane().add(textArea);
@@ -58,7 +70,7 @@ public class app {
 		
 		JScrollPane scroll = new JScrollPane(textArea,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroll.setBounds(22, 56, 409, 207);
+		scroll.setBounds(29, 56, 388, 204);
 		//scroll.setSize( 100, 100 );
 		frame.getContentPane().add(scroll);
 		frame.setVisible (true);
@@ -66,8 +78,8 @@ public class app {
 		
 		JFileChooser fileChooser = new JFileChooser();
 		
-		JButton btnTouchMe = new JButton("touch me ;)");
-		btnTouchMe.setBounds(12, 0, 117, 25);
+		JButton btnTouchMe = new JButton("Select Sample");
+		btnTouchMe.setBounds(32, 21, 117, 25);
 		btnTouchMe.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
@@ -80,11 +92,10 @@ public class app {
 		});
 		frame.getContentPane().add(btnTouchMe);
 		
-		JButton btnBayes = new JButton("Bayes");
-		btnBayes.setBounds(181, 0, 117, 25);
+		JButton btnBayes = new JButton("Create Bayes");
+		btnBayes.setBounds(159, 21, 117, 25);
 		btnBayes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
 					if (A==null){
 						textArea.setText("No sample available");
 					}else {
@@ -92,9 +103,14 @@ public class app {
 							textArea.setText("Empty Sample");
 						}
 						else {
-							G=new Grafos(A.dataDim());
+							String pseudocontagem = JOptionPane.showInputDialog(frame, "Choose your Pseudocounting");
+							float pseudo = Float.parseFloat(pseudocontagem);
+							G = new Grafos(A.dataDim());
+							G.build(A);
+							R = new Bayes(G.max_spanning_tree(), A, pseudo);
 							
-							textArea.setText(G.toString());	
+							
+							textArea.setText(R+" "+pseudocontagem);	
 						}
 					}
 		
@@ -102,5 +118,35 @@ public class app {
 			}
 		});
 		frame.getContentPane().add(btnBayes);
+		
+		JFileChooser fileChooser2 = new JFileChooser();
+		
+		JButton btnExport = new JButton("Export");
+		btnExport.setBounds(286, 23, 117, 25);
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FileOutputStream fout;
+				
+				try {
+					fout = new FileOutputStream
+							(fileChooser2.getSelectedFile().getAbsolutePath() + "/A", true);
+					ObjectOutputStream oos = new ObjectOutputStream(fout);
+					oos.writeObject(A);
+					oos.close();
+					fout.close();
+				
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			    
+			}
+		});
+		
+		frame.getContentPane().add(btnExport);
 	}
 }
