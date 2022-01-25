@@ -1,8 +1,10 @@
 package projeto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Bayes {
+public class Bayes implements Serializable{
+	private static final long serialVersionUID=1L;
 	private Floresta tree;
 	private double[][][] tensor;
 
@@ -81,6 +83,6 @@ public class Bayes {
 
 	@Override
 	public String toString() {
-		return "Bayes ["+ tree + ", tensor=" + Arrays.deepToString(tensor) + "]";
+		return tree + "\nTensor \n" + Arrays.deepToString(tensor) + "]";
 	}
 }
