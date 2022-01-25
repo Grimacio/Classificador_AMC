@@ -1,10 +1,12 @@
 package projeto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Floresta {
+public class Floresta implements Serializable{
+	private static final long serialVersionUID=1L;
 	private int[] v;
 	
 //constrói uma floresta com n nós independentes
@@ -75,5 +77,6 @@ public class Floresta {
 	
 	@Override
 	public String toString() {
-		return "Floresta [v=" + Arrays.toString(v) + "]";
+		return "Floresta \n" + Arrays.toString(v) ;
 	}
+}
