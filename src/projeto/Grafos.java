@@ -46,7 +46,15 @@ public class Grafos implements Serializable{
 		} else throw new RuntimeException("Graph: Cannot create graph with negative dimensions");
 	}
 	
-//adiciona no grafo uma aresta com um certo custo entre dois nós
+	public LinkedList<Adj>[] getGraph() {
+		return graph;
+	}
+
+	public int getDim() {
+		return dim;
+	}
+
+	//adiciona no grafo uma aresta com um certo custo entre dois nós
 	public void add_edge(int x, int y, double cost) {
 		if(x < dim && y < dim && x >= 0 && y >= 0) {
 			Adj n = new Adj(y,cost);

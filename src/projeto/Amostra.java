@@ -1,9 +1,11 @@
 package projeto;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,8 +87,23 @@ public class Amostra implements Serializable{
 		}
 	}
 	
-public ArrayList<int[]> getList() {
-		return list;
+	public ArrayList<int[]> getList() {
+			return list;
+		}
+	public void setList(Amostra am) {
+		this.list = am.list;
+	}
+	
+	public void readAm(String path) { // iii
+		try {
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+			Amostra amostra = (Amostra) ois.readObject();
+			this.setList(amostra);
+			ois.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	//adiciona um vetor a amostra se tiver as dimensoes certas

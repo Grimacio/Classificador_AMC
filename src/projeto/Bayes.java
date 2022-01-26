@@ -1,5 +1,9 @@
 package projeto;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -34,6 +38,42 @@ public class Bayes implements Serializable{
 	
 	public double[][][] getTensor() {
 		return tensor;
+	}
+	
+	public void setTree(Floresta tree) {
+		this.tree = tree;
+	}
+
+	public void setTensor(double[][][] tensor) {
+		this.tensor = tensor;
+	}
+	
+	public Floresta getTree() {
+		return tree;
+	}
+
+	public void readBayes(String path) { // iii
+		try {
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+			Bayes rede = (Bayes) ois.readObject();
+			setTensor(rede.getTensor());
+			setTree(rede.getTree());
+			ois.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeBayes(String path) { // ii
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
+			oos.writeObject(this);
+			oos.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private double[][] matrixCondRoot(Amostra amostra,int root, double s) {

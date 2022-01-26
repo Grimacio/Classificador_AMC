@@ -9,11 +9,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
@@ -28,6 +32,7 @@ public class app implements Serializable{
 	Grafos G;
 	Bayes R;
 	private JTextArea textArea;
+	double pseudoGrande=0;
 	
 	/**
 	 * Launch the application.
@@ -48,6 +53,7 @@ public class app implements Serializable{
 	/**
 	 * Create the application.
 	 */
+	
 	public app() {
 		initialize();
 	}
@@ -105,6 +111,7 @@ public class app implements Serializable{
 						else {
 							String pseudocontagem = JOptionPane.showInputDialog(frame, "Choose your Pseudocounting");
 							float pseudo = Float.parseFloat(pseudocontagem);
+							pseudoGrande= pseudo;
 							G = new Grafos(A.dataDim());
 							G.build(A);
 							R = new Bayes(G.max_spanning_tree(), A, pseudo);
@@ -126,25 +133,13 @@ public class app implements Serializable{
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FileOutputStream fout;
-				
-				try {
 					int r = fileChooser2.showOpenDialog((Component)e.getSource());
 					if (r==fileChooser2.APPROVE_OPTION){
-						fout = new FileOutputStream(fileChooser2.getSelectedFile().getAbsolutePath() + ".csv.ser", true);
-						ObjectOutputStream oos = new ObjectOutputStream(fout);
-						oos.writeObject(R.getTensor());
-						oos.close();
-						fout.close();
+						R.writeBayes(fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
+						Bayes R2= new Bayes(R.getTree(), A, pseudoGrande);
+						R2.readBayes(fileChooser2.getSelectedFile().getAbsolutePath() + ".txt");
+						textArea.setText("AAAAAAAA" + Arrays.deepToString(R2.getTensor()).replace("],", "], \n "));
 					}
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			    
 			}
 		});
 		
