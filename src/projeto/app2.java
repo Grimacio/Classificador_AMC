@@ -19,7 +19,6 @@ public class app2 {
 	private JFrame frame;
 	Classificador C= new Classificador(new Amostra());
 	private JTextArea textArea;
-	double pseudoGrande=0;
 
 
 	/**
