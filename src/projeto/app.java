@@ -98,27 +98,30 @@ public class app implements Serializable{
 		frame.setBounds(100, 100, 685, 419);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JFileChooser fileChooser = new JFileChooser();
 		
-		JButton ChooseSample = new JButton("Choose Sample");
-		ChooseSample.setBounds(10, 210, 187, 45);
-		ChooseSample.setFont(new Font("Dialog", Font.PLAIN, 12));
-		ChooseSample.addActionListener(new ActionListener() {
+		JFileChooser fileChooser2 = new JFileChooser();
+		
+		JButton Export = new JButton("Export Data");
+		Export.setBounds(10, 305, 187, 45);
+		Export.setFont(new Font("Dialog", Font.PLAIN, 12));
+		Export.setEnabled(false);
+		Export.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
-				int r = fileChooser.showOpenDialog((Component)e.getSource());
-				if (r==fileChooser.APPROVE_OPTION){
-					A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
-					ChooseSample.setText("Amostra Escolhida");
-					ChooseSample.setEnabled(false);
-					textArea.setText(A.toString().replace("],", "], \n "));	
-				}
+				FileOutputStream fout;
+					int r = fileChooser2.showOpenDialog((Component)e.getSource());
+					if (r==fileChooser2.APPROVE_OPTION){
+						R.writeBayes(fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
+						Export.setText("Export to Another Directory");
+						textArea.setText("Good to go! \n" +fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
+					}
 			}
 		});
 		
 		JButton CreateBayes = new JButton("Create Bayes Arborean Tree");
 		CreateBayes.setBounds(10, 258, 187, 45);
 		CreateBayes.setFont(new Font("Dialog", Font.PLAIN, 12));
+		CreateBayes.setEnabled(false);
 		CreateBayes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (A==null){
@@ -136,6 +139,7 @@ public class app implements Serializable{
 						R = new Bayes(G.max_spanning_tree(), A, pseudo);
 						CreateBayes.setText("Bayes Already Created");
 						CreateBayes.setEnabled(false);
+						Export.setEnabled(true);
 						textArea.setText(R+" "+pseudocontagem);	
 						
 						
@@ -145,23 +149,45 @@ public class app implements Serializable{
 			
 		});
 		
-		JFileChooser fileChooser2 = new JFileChooser();
 		
-		JButton Export = new JButton("Export Data");
-		Export.setBounds(10, 305, 187, 45);
-		Export.setFont(new Font("Dialog", Font.PLAIN, 12));
-		Export.addActionListener(new ActionListener() {
+		JFileChooser fileChooser = new JFileChooser();
+		
+		JButton ChooseSample = new JButton("Choose Sample");
+		ChooseSample.setBounds(10, 210, 187, 45);
+		ChooseSample.setFont(new Font("Dialog", Font.PLAIN, 12));
+		ChooseSample.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
-				FileOutputStream fout;
-					int r = fileChooser2.showOpenDialog((Component)e.getSource());
-					if (r==fileChooser2.APPROVE_OPTION){
-						R.writeBayes(fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
-						Export.setText("Export to Another Directory");
-						textArea.setText("Good to go! \n" +fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
-					}
+				int r = fileChooser.showOpenDialog((Component)e.getSource());
+				if (r==fileChooser.APPROVE_OPTION){
+					A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
+					ChooseSample.setText("Amostra Escolhida");
+					ChooseSample.setEnabled(false);
+					CreateBayes.setEnabled(true);
+					textArea.setText(A.toString().replace("],", "], \n "));	
+				}
 			}
 		});
+		
+		
+		JButton btnReset = new JButton("Reset");
+		btnReset.setBounds(112, 354, 83, 16);
+		btnReset.setFont(new Font("Dialog", Font.PLAIN, 12));
+		btnReset.addActionListener(new ActionListener() {
+			@SuppressWarnings("static-access")
+			public void actionPerformed(ActionEvent e) {
+				
+					A=null;
+					G=null;
+					R=null;
+					ChooseSample.setEnabled(true);
+					CreateBayes.setEnabled(false);
+					Export.setEnabled(false);
+					textArea.setText("");	
+				
+			}
+		});
+		
 		
 		frame.getContentPane().add(Export);
 		
@@ -188,6 +214,8 @@ public class app implements Serializable{
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
 		Classifier.setBounds(40, 15, 120, 174);
 		menu.add(Classifier);
+		
+		menu.add(btnReset);
 		
 		JLabel lblNewLabel = new JLabel("Developers: Beatriz Vidal, Dinis Pereira, Guilherme Gaspar & Margarida Cordeiro\r\n");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
