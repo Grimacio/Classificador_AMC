@@ -26,29 +26,14 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Color;
 
-class IHandler{
-    public double currentLoad;
-    public String currentPrice;
-    public String configArgs[];
-};
-
 public class app implements Serializable{
 	private static final long serialVersionUID=1L;
 
 	private JFrame frame;
 	private JTextArea textArea;
-	Amostra A;
-	Grafos G;
-	Bayes R;
+	Classificador C= new Classificador(new Amostra());
 	String path;
 	
-	public static void serializeDataOut(IHandler ish)throws IOException{
-	    String fileName= "Test.txt";
-	    FileOutputStream fos = new FileOutputStream(fileName);
-	    ObjectOutputStream oos = new ObjectOutputStream(fos);
-	    oos.writeObject(ish);
-	    oos.close();
-	}
 	
 	
 	/**
@@ -78,7 +63,8 @@ public class app implements Serializable{
 	 * Initialize the contents of the frame.
 	 */
 	
-	private void initialize() {		
+	private void initialize() {	
+		System.out.println(C);
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -107,7 +93,7 @@ public class app implements Serializable{
 		Export.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
-				R.writeBayes(path.replace(".csv", ".txt"));
+				C.R.writeBayes(path.replace(".csv", ".txt"));
 				Export.setText("Export to Another Directory");
 				textArea.setText("Good to go! \n" +path.replace(".csv", ".txt"));
 			}
@@ -119,21 +105,21 @@ public class app implements Serializable{
 		CreateBayes.setEnabled(false);
 		CreateBayes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (A==null){
+				if (C.A==null){
 					textArea.setText("No sample available");
 				}else {
-					if(A.length()==0) {
+					if(C.A.length()==0) {
 						textArea.setText("Empty Sample");
 					}
 					else {
 						String pseudocontagem = JOptionPane.showInputDialog(frame, "Choose your Pseudocounting");
 						double pseudo = Double.parseDouble(pseudocontagem);
-						G = new Grafos(A.dataDim());
-						G.build(A);
-						R = new Bayes(G.max_spanning_tree(), A, pseudo);
+						String teste= C.graph().toString();
+						System.out.println("grafo adicionado "+teste);
+						textArea.setText(C.bayes(pseudo)+" "+pseudo);	
 						CreateBayes.setText("Bayes Created ("+pseudo+ ")");
 						Export.setEnabled(true);
-						textArea.setText(R+" "+pseudocontagem);	
+						
 						
 						
 					}
@@ -154,11 +140,11 @@ public class app implements Serializable{
 				int r = fileChooser.showOpenDialog((Component)e.getSource());
 				if (r==fileChooser.APPROVE_OPTION){
 					path=fileChooser.getSelectedFile().getAbsolutePath();
-					A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
+					C.A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
 					ChooseSample.setText("Amostra Escolhida");
 					ChooseSample.setEnabled(false);
 					CreateBayes.setEnabled(true);
-					textArea.setText(A.toString().replace("],", "], \n "));	
+					textArea.setText(C.A.toString().replace("],", "], \n "));	
 				}
 			}
 		});
@@ -171,9 +157,7 @@ public class app implements Serializable{
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 				
-					A=null;
-					G=null;
-					R=null;
+					C=new Classificador();
 					ChooseSample.setEnabled(true);
 					ChooseSample.setText("Choose Sample");
 					CreateBayes.setEnabled(false);

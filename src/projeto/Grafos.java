@@ -55,6 +55,14 @@ public class Grafos implements Serializable{
 		return dim;
 	}
 
+	public void setGraph(LinkedList<Adj>[] graph) {
+		this.graph = graph;
+	}
+
+	public void setDim(int dim) {
+		this.dim = dim;
+	}
+
 	//adiciona no grafo uma aresta com um certo custo entre dois nós
 	//O(1)
 	public void add_edge(int x, int y, double cost) {

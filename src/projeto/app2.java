@@ -17,7 +17,7 @@ import javax.swing.JTextArea;
 public class app2 {
 
 	private JFrame frame;
-	Bayes R = new Bayes();
+	Classificador C= new Classificador();
 	private JTextArea textArea;
 	double pseudoGrande=0;
 
@@ -77,8 +77,8 @@ public class app2 {
 			public void actionPerformed(ActionEvent e) {
 					int r = fileChooserUSED.showOpenDialog((Component)e.getSource());
 					if (r==fileChooserUSED.APPROVE_OPTION) {
-						R.readBayes(fileChooserUSED.getSelectedFile().getAbsolutePath());
-						textArea.setText(Arrays.deepToString(R.getTensor()).replace("],", "], \n "));
+						C.R.readBayes(fileChooserUSED.getSelectedFile().getAbsolutePath());
+						textArea.setText(Arrays.deepToString(C.R.getTensor()).replace("],", "], \n "));
 					}
 			}
 		});
@@ -90,30 +90,30 @@ public class app2 {
 		btnNewButton_1.setBounds(198, 26, 90, 31);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int [] vector = new int[R.getTree().size()];
+				int [] vector = new int[C.R.getTree().size()];
 				for (int i = 0; i < vector.length-1; i++) {
 					String variable = JOptionPane.showInputDialog(frame, "Choose your "+(i+1)+" variable");
 					int var = Integer.parseInt(variable);
 					vector[i] = var;
 				}
 				long startTime = System.nanoTime();
-				double max = 0;
-				int max_index = 0;
-				double[] prob = new double[R.dimClass()];
-				int i = 0;
-				//O(r*n)
-				while (i < (R.dimClass())) {
-					vector[vector.length-1]=i;
-					System.out.println("---"+R.prob(vector));
-					double max_aux = R.prob(vector);
-					prob[i] = max_aux;
-					if (max_aux > max) {
-						max=max_aux;
-						max_index=i;
-					}
-					i=i+1;
-				}
-				textArea.setText("result = "+max_index+", with probabilty of "+(max*100)+"%");
+//				double max = 0;
+//				int max_index = 0;
+//				double[] prob = new double[R.dimClass()];
+//				int i = 0;
+//				//O(r*n)
+//				while (i < (R.dimClass())) {
+//					vector[vector.length-1]=i;
+//					System.out.println("---"+R.prob(vector));
+//					double max_aux = R.prob(vector);
+//					prob[i] = max_aux;
+//					if (max_aux > max) {
+//						max=max_aux;
+//						max_index=i;
+//					}
+//					i=i+1;
+//				}
+				textArea.setText(C.classify(vector));
 				long endTime = System.nanoTime();
 				System.out.println("create Bayes"+(endTime-startTime)/1000000);
 			}
