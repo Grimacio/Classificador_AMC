@@ -40,7 +40,7 @@ public class app implements Serializable{
 	Amostra A;
 	Grafos G;
 	Bayes R;
-	IHandler H = new IHandler();
+	String path;
 	
 	public static void serializeDataOut(IHandler ish)throws IOException{
 	    String fileName= "Test.txt";
@@ -95,10 +95,10 @@ public class app implements Serializable{
 		frame.getContentPane().add(textArea);
 		textArea.setColumns(10);
 		frame.setBackground(new Color(255, 255, 255));
-		frame.setBounds(100, 100, 685, 419);
+		frame.setBounds(100, 100, 871, 611);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		
+		JFileChooser fileChooser = new JFileChooser();
 		JFileChooser fileChooser2 = new JFileChooser();
 		
 		JButton Export = new JButton("Export Data");
@@ -108,13 +108,9 @@ public class app implements Serializable{
 		Export.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
-				FileOutputStream fout;
-					int r = fileChooser2.showOpenDialog((Component)e.getSource());
-					if (r==fileChooser2.APPROVE_OPTION){
-						R.writeBayes(fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
-						Export.setText("Export to Another Directory");
-						textArea.setText("Good to go! \n" +fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
-					}
+				R.writeBayes(path.replace(".csv", ".txt"));
+				Export.setText("Export to Another Directory");
+				textArea.setText("Good to go! \n" +path.replace(".csv", ".txt"));
 			}
 		});
 		
@@ -133,12 +129,10 @@ public class app implements Serializable{
 					else {
 						String pseudocontagem = JOptionPane.showInputDialog(frame, "Choose your Pseudocounting");
 						double pseudo = Double.parseDouble(pseudocontagem);
-						
 						G = new Grafos(A.dataDim());
 						G.build(A);
 						R = new Bayes(G.max_spanning_tree(), A, pseudo);
-						CreateBayes.setText("Bayes Already Created");
-						CreateBayes.setEnabled(false);
+						CreateBayes.setText("Bayes Created ("+pseudo+ ")");
 						Export.setEnabled(true);
 						textArea.setText(R+" "+pseudocontagem);	
 						
@@ -150,7 +144,7 @@ public class app implements Serializable{
 		});
 		
 		
-		JFileChooser fileChooser = new JFileChooser();
+		
 		
 		JButton ChooseSample = new JButton("Choose Sample");
 		ChooseSample.setBounds(10, 210, 187, 45);
@@ -160,6 +154,7 @@ public class app implements Serializable{
 			public void actionPerformed(ActionEvent e) {
 				int r = fileChooser.showOpenDialog((Component)e.getSource());
 				if (r==fileChooser.APPROVE_OPTION){
+					path=fileChooser.getSelectedFile().getAbsolutePath();
 					A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
 					ChooseSample.setText("Amostra Escolhida");
 					ChooseSample.setEnabled(false);
@@ -181,7 +176,9 @@ public class app implements Serializable{
 					G=null;
 					R=null;
 					ChooseSample.setEnabled(true);
+					ChooseSample.setText("Choose Sample");
 					CreateBayes.setEnabled(false);
+					ChooseSample.setText("Create Bayes Arborean Tree");
 					Export.setEnabled(false);
 					textArea.setText("");	
 				
@@ -197,7 +194,7 @@ public class app implements Serializable{
 		
 		JScrollPane scroll = new JScrollPane(textArea,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroll.setBounds(233, 24, 409, 302);
+		scroll.setBounds(233, 24, 618, 543);
 		//scroll.setSize( 100, 100 );
 		frame.getContentPane().add(scroll);
 		frame.setVisible (true);
