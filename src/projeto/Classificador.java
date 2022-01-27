@@ -8,6 +8,7 @@ public class Classificador {
 	public Classificador(Amostra a) {
 		this.A=a;
 		this.G = new Grafos(1);
+		this.R = new Bayes();
 	}
 	
 	@Override
@@ -23,10 +24,8 @@ public class Classificador {
 	}
 	
 	public Bayes bayes(double s) {
-		if(R==null) {
-			Bayes r = new Bayes(G.max_spanning_tree(), A, s);
-			R= r;
-		}
+		Bayes r = new Bayes(G.max_spanning_tree(), A, s);
+		R= r;
 		return R;
 	}
 	
@@ -49,13 +48,13 @@ public class Classificador {
 	}
 	
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Classificador C= new Classificador(new Amostra("bcancer.csv"));
-		C.graph();
-		System.out.println(C.G);
-		
-	}
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		Classificador C= new Classificador(new Amostra("bcancer.csv"));
+//		C.graph();
+//		System.out.println(C.G);
+//		
+//	}
 }
 	
 

@@ -19,6 +19,9 @@ public class app2 {
 	private JFrame frame;
 	Classificador C= new Classificador(new Amostra());
 	private JTextArea textArea;
+	long startTime=0;
+	long endTime=0;
+	long time;
 
 
 	/**
@@ -77,6 +80,7 @@ public class app2 {
 					int r = fileChooserUSED.showOpenDialog((Component)e.getSource());
 					if (r==fileChooserUSED.APPROVE_OPTION) {
 						C.R.readBayes(fileChooserUSED.getSelectedFile().getAbsolutePath());
+						System.out.println(C.R.getTensor()==null);
 						textArea.setText(Arrays.deepToString(C.R.getTensor()).replace("],", "], \n "));
 					}
 			}
@@ -95,7 +99,7 @@ public class app2 {
 					int var = Integer.parseInt(variable);
 					vector[i] = var;
 				}
-				long startTime = System.nanoTime();
+				startTime = System.nanoTime();
 //				double max = 0;
 //				int max_index = 0;
 //				double[] prob = new double[R.dimClass()];
@@ -112,9 +116,11 @@ public class app2 {
 //					}
 //					i=i+1;
 //				}
-				textArea.setText(C.classify(vector));
-				long endTime = System.nanoTime();
-				System.out.println("create Bayes"+(endTime-startTime)/1000000);
+				String resultado=C.classify(vector);
+				endTime = System.nanoTime();
+				time= (endTime-startTime);
+				textArea.setText(resultado + "\n------> "+ time + "ms");
+				
 			}
 		});
 		

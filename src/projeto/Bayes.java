@@ -16,7 +16,7 @@ public class Bayes implements Serializable{
 	public Bayes() {
 		super();
 		tree = null;
-		tensor = null;
+		tensor = new double[1][1][1];
 		s = 0;
 	}
 
