@@ -33,6 +33,9 @@ public class app implements Serializable{
 	private JTextArea textArea;
 	Classificador C= new Classificador(new Amostra());
 	String path;
+	long amostraTime=0, bayesTime=0;
+	long startTime=0;
+	long endTime=0;
 	
 	
 	
@@ -113,10 +116,14 @@ public class app implements Serializable{
 					}
 					else {
 						String pseudocontagem = JOptionPane.showInputDialog(frame, "Choose your Pseudocounting");
+						startTime=System.nanoTime();
 						double pseudo = Double.parseDouble(pseudocontagem);
-						String teste= C.graph().toString();
-						System.out.println("grafo adicionado "+teste);
-						textArea.setText(C.bayes(pseudo)+" "+pseudo);	
+						C.graph();
+						C.bayes(pseudo);
+						endTime=System.nanoTime();
+						bayesTime= (endTime-startTime)/1000000;
+						textArea.setText(C.R+" "+pseudo+ ", "+ "["+bayesTime+"ms], TOTAL= " +(bayesTime+amostraTime) + "ms");
+						
 						CreateBayes.setText("Bayes Created ("+pseudo+ ")");
 						Export.setEnabled(true);
 						
@@ -140,11 +147,14 @@ public class app implements Serializable{
 				int r = fileChooser.showOpenDialog((Component)e.getSource());
 				if (r==fileChooser.APPROVE_OPTION){
 					path=fileChooser.getSelectedFile().getAbsolutePath();
+					startTime=System.nanoTime();
 					C.A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
+					endTime=System.nanoTime();
+					amostraTime= (endTime-startTime)/1000000;
 					ChooseSample.setText("Amostra Escolhida");
 					ChooseSample.setEnabled(false);
 					CreateBayes.setEnabled(true);
-					textArea.setText(C.A.toString().replace("],", "], \n "));	
+					textArea.setText(C.A.toString().replace("],", "], \n ")+ "["+amostraTime+"ms]");	
 				}
 			}
 		});
