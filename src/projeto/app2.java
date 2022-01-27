@@ -101,6 +101,7 @@ public class app2 {
 				int max_index = 0;
 				double[] prob = new double[R.dimClass()];
 				int i = 0;
+				//O(r*n)
 				while (i < (R.dimClass())) {
 					vector[vector.length-1]=i;
 					System.out.println("---"+R.prob(vector));

@@ -86,10 +86,11 @@ public class Amostra implements Serializable{
 			}
 		}
 	}
-	
+	// O(1)
 	public ArrayList<int[]> getList() {
 			return list;
 		}
+	// O(1)
 	public void setList(Amostra am) {
 		this.list = am.list;
 	}
@@ -107,6 +108,7 @@ public class Amostra implements Serializable{
 	}
 
 	//adiciona um vetor a amostra se tiver as dimensoes certas
+	//O(1)
 	public void add (int[] v){
 		if(list.isEmpty() && v.length!=0) {
 			list.add(v);
@@ -118,11 +120,13 @@ public class Amostra implements Serializable{
 	}
 	
 //retorna numero de vetores da amostra
+// O(1)
 	public int length() {
 		return list.size();
 	}
 
 // retorna o vetor com indice i da amostra
+// O(1)
 	public int[] element(int i) {
 		if(i>=0 && i<length()) {
 			return list.get(i);
@@ -130,6 +134,7 @@ public class Amostra implements Serializable{
 	}
 
 // retorna o número de valores que uma variavel pode assumir nesta amostra, assumindo que varia entre 0 e o seu valor maximo 
+// O(n)	
 	public int domain(int i) {
 		if(i>=0 && i<dataDim()) {
 			int max = 0;
@@ -152,6 +157,7 @@ public class Amostra implements Serializable{
 	}
 
 // retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
+// O(n*m), n= # elementos da amostra, m= # dataDim()
 	public int count(int[] v, int[] w) {
 		int contador=0;	
 		int i=0;
@@ -175,6 +181,9 @@ public class Amostra implements Serializable{
 // recebe duas variaveis e retorna a matriz cujas linhas sao os valores de uma variavel e as colunas os valores da outra, cada entrada ij
 // é a contagem de ocorrencias em que a variavel daddy é i e son é j. A matriz tem uma linha e coluna extras que são o total de ocorrências 
 // em que daddy é i (coluna) e son é j (linha)
+	
+//O(n²)
+//Fazer funcao que retorne um vetor cujos indices sao as vars e os valores sao os domains
 	public double[][] matrixAux(int son, int daddy) {
 		double[][] matrix= new double[domain(daddy)+1][domain(son)+1];
 		for (int[] element : this.list) {
@@ -186,13 +195,15 @@ public class Amostra implements Serializable{
 	}
 	
 //retorna o numero de variaveis que os vetores de uma amostra têm
+// O(1)
 	public int dataDim() {
 		if(list!=null) {
 			return this.list.get(0).length;
-		}else throw new RuntimeException("Cannot calculate data dimmension for not existent sample");
+		}else throw new RuntimeException("Cannot calculate data dimension for not existent sample");
 	}
 	
 //calcula a informaçao mutua entre duas variaveis, recebendo a matriz de contagens das interseçoes e total
+	//O(domain(daddy)*domain(son)*log n)
 	public double mutualInfo(int x, int y) {
 		double[][] matrix = matrixAux(x,y);
 		double soma=0;
@@ -210,6 +221,7 @@ public class Amostra implements Serializable{
 	}
 	
 // retorna as variáveis onde existe apenas um único valor ao longo de toda a amostra
+	// O(dataDim()*n)
 	public boolean[] Alone() {
 		Verify[] res = new Verify[dataDim()];
 		boolean[] Alone = new boolean[dataDim()];

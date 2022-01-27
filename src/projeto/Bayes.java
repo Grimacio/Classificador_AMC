@@ -21,6 +21,7 @@ public class Bayes implements Serializable{
 	}
 
 //cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem
+//O(n²(log(n)+ds) +n(ds²+r))
 	public Bayes(Floresta floresta, Amostra amostra, double s) {
 		super();
 		if(!floresta.treeQ()) {
@@ -32,31 +33,32 @@ public class Bayes implements Serializable{
 	}
 	
 //cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem	
+//O(n(ds²+r) + n²ds)
 	public double[][][] tensorConstructor(Floresta floresta, Amostra amostra, double s) {
 		double[][][] Tensor = new double[floresta.size()][][];
 		for (int i = 0; i < floresta.size(); i++) {
 			int daddy= floresta.getForest()[i];
 			if(floresta.isRoot(i)) {
-				Tensor[i]=matrixCondRoot(amostra,i, s);
+				Tensor[i]=matrixCondRoot(amostra,i, s); //O(r*n)*1
 			}else {
-			Tensor[i]= matrixCond(amostra,i,daddy,s);
+			Tensor[i]= matrixCond(amostra,i,daddy,s); //O(ds² + (d+ds)n)(n-1)
 			}
 		}
 		return Tensor;
 	}
-	
+	//O(1)
 	public double[][][] getTensor() {
 		return tensor;
 	}
-	
+	//O(1)
 	public void setTree(Floresta tree) {
 		this.tree = tree;
 	}
-
+	//O(1)
 	public void setTensor(double[][][] tensor) {
 		this.tensor = tensor;
 	}
-	
+	//O(1)
 	public Floresta getTree() {
 		return tree;
 	}
@@ -85,7 +87,7 @@ public class Bayes implements Serializable{
 			e.printStackTrace();
 		}
 	}
-
+	//O(r*n)
 	private double[][] matrixCondRoot(Amostra amostra,int root, double s) {
 		double[][] newMatrix= new double[1][amostra.domain(root)];
 		for(int j=0; j<newMatrix[0].length;j++) {
@@ -97,6 +99,7 @@ public class Bayes implements Serializable{
 		return newMatrix;
 	}
 	
+	//O(s+ d*(n+s*(n+s)))=O(ds² + (d+ds)n)
 	private double[][] matrixCond(Amostra amostra,int son, int daddy, double s) {
 	
 		double[][] newMatrix= new double[amostra.domain(daddy)][amostra.domain(son)];
@@ -111,7 +114,7 @@ public class Bayes implements Serializable{
 		}
 		return newMatrix;
 	}
-	
+	//O(n+s)
 	private double DFO(Amostra amostra, int son, int daddy, int sonValue, int daddyValue, int daddyCount, double s){
 		int[] vars= {son, daddy};
 		int[] varsValue = {sonValue, daddyValue};
@@ -120,12 +123,13 @@ public class Bayes implements Serializable{
 	}
 	
 	
-// WHAT IS THIS
+// WHAT IS THIS 
+//O(n);
 	public double prob(int[] vector) {
 		int[] vTree= this.tree.getForest();
 		double prob=1;
 		int i = 0;
-		while (i < vTree.length-1) {
+		while (i < vTree.length-1) { //n
 			int daddy = vTree[i];
 			if(daddy!=-1) {
 				if (vector[i] < tensor[i][0].length) {
@@ -147,10 +151,9 @@ public class Bayes implements Serializable{
 			}
 		}
 		prob*= tensor[i][0][vector[i]];
-		System.out.println(tensor[i][0][vector[i]]);
 		return prob;
 	}
-	
+	//O(1)
 	public int dimClass() {
 		return tensor[tensor.length-1][0].length;
 	}
@@ -158,10 +161,6 @@ public class Bayes implements Serializable{
 	@Override
 	public String toString() {
 		return tree + "\nTensor \n" + Arrays.deepToString(tensor) + "]";
-	}
-	
-	public void main(String[] Args) {
-		
 	}
 	
 	

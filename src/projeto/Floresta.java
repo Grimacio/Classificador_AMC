@@ -10,6 +10,7 @@ public class Floresta implements Serializable{
 	private int[] v;
 	
 //constrói uma floresta com n nós independentes
+	//O(n);
 	public Floresta(int n) {
 		super();
 		if(n >= 0) {
@@ -21,6 +22,7 @@ public class Floresta implements Serializable{
 	}
 	
 //recebe dois nós e torna m o pai de n
+	//O(1)
 	public void set_parent(int n, int m) {
 		if(n < v.length && m < v.length && n >=0 && m >= 0) {
 			if(v[m] != n) {
@@ -30,6 +32,7 @@ public class Floresta implements Serializable{
 	}
 	
 //recebe uma floresta e verifica se essa floresta representa uma árvore
+// O(n²*log(n)+n)
 	public boolean treeQ() {
 		boolean floresta = false;
 		int daddy = -1;
@@ -45,6 +48,7 @@ public class Floresta implements Serializable{
 		} else return floresta;
 	}
 	
+	//O(n²*log(n))
 	private LinkedList<Integer> treeQ(int daddy) {
 		LinkedList<Integer> visited = new LinkedList<Integer>();
 		Queue<Integer> sons = new LinkedList<Integer>();
@@ -61,16 +65,19 @@ public class Floresta implements Serializable{
 	}
 	
 //transforma o nó i na raiz de uma árvore
+//O(1)
 	public boolean isRoot(int i) {
 		return v[i]==-1;
 	}
 	
 //retorna o tamanho da floresta
+// O(1)
 	public int size() {
 		return v.length;
 	}
 	
 //retorna a floresta
+//O(1)
 	public int[] getForest() {
 		return v;
 	}
