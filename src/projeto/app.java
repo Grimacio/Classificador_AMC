@@ -109,6 +109,8 @@ public class app implements Serializable{
 				int r = fileChooser.showOpenDialog((Component)e.getSource());
 				if (r==fileChooser.APPROVE_OPTION){
 					A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
+					ChooseSample.setText("Amostra Escolhida");
+					ChooseSample.setEnabled(false);
 					textArea.setText(A.toString().replace("],", "], \n "));	
 				}
 			}
@@ -128,14 +130,15 @@ public class app implements Serializable{
 					else {
 						String pseudocontagem = JOptionPane.showInputDialog(frame, "Choose your Pseudocounting");
 						double pseudo = Double.parseDouble(pseudocontagem);
-						long startTime = System.nanoTime();
+						
 						G = new Grafos(A.dataDim());
 						G.build(A);
 						R = new Bayes(G.max_spanning_tree(), A, pseudo);
-						
+						CreateBayes.setText("Bayes Already Created");
+						CreateBayes.setEnabled(false);
 						textArea.setText(R+" "+pseudocontagem);	
-						long endTime = System.nanoTime();
-						System.out.println("create Bayes"+(endTime-startTime)/1000000);
+						
+						
 					}
 				}
 			}
@@ -154,6 +157,8 @@ public class app implements Serializable{
 					int r = fileChooser2.showOpenDialog((Component)e.getSource());
 					if (r==fileChooser2.APPROVE_OPTION){
 						R.writeBayes(fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
+						Export.setText("Export to Another Directory");
+						textArea.setText("Good to go! \n" +fileChooser2.getSelectedFile().getAbsolutePath()+ ".txt");
 					}
 			}
 		});
