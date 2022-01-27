@@ -11,6 +11,14 @@ public class Bayes implements Serializable{
 	private static final long serialVersionUID=1L;
 	private Floresta tree;
 	private double[][][] tensor;
+	private double s;
+
+	public Bayes() {
+		super();
+		tree = null;
+		tensor = null;
+		s = 0;
+	}
 
 //cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem
 	public Bayes(Floresta floresta, Amostra amostra, double s) {
@@ -19,7 +27,8 @@ public class Bayes implements Serializable{
 			throw new RuntimeException("This forest is not a tree");
 		}
 		this.tree=floresta;
-		tensor= tensorConstructor(floresta, amostra, s);		
+		tensor= tensorConstructor(floresta, amostra, s);
+		this.s=s;
 	}
 	
 //cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem	
@@ -51,6 +60,7 @@ public class Bayes implements Serializable{
 	public Floresta getTree() {
 		return tree;
 	}
+	
 
 	public void readBayes(String path) { // iii
 		try {
@@ -96,7 +106,7 @@ public class Bayes implements Serializable{
 			int daddyCount = amostra.count(vars, varsValue);
 			for(int j=0; j<newMatrix[0].length;j++) {
 				
-				newMatrix[i][j]=DFO(amostra, son, daddy, i , j, daddyCount, s);
+				newMatrix[i][j]=DFO(amostra, son, daddy, j , i, daddyCount, s);
 			}
 		}
 		return newMatrix;
@@ -111,22 +121,48 @@ public class Bayes implements Serializable{
 	
 	
 // WHAT IS THIS
-	public String prob(int[] vector) {
+	public double prob(int[] vector) {
 		int[] vTree= this.tree.getForest();
 		double prob=1;
-		for (int i = 0; i < vTree.length; i++) {
+		int i = 0;
+		while (i < vTree.length-1) {
 			int daddy = vTree[i];
 			if(daddy!=-1) {
-				int babyVal= vector[i];
-				int daddyVal = vector[daddy];
-				prob*=tensor[i][daddyVal][babyVal];
+				if (vector[i] < tensor[i][0].length) {
+					int babyVal= vector[i]; 
+					if (vector[daddy] < tensor[i].length) {
+						int daddyVal = vector[daddy];
+						prob*=tensor[i][daddyVal][babyVal];
+					} else {
+						prob*=s/(s*tensor[i][0].length);
+					}
+				} else {
+					if (vector[daddy] < tensor[i].length) {
+						prob*=s/(tensor[i][vector[daddy]][tensor[i][0].length-1]+s*tensor[i][0].length);
+					} else {
+						prob*=s/(s*tensor[i][0].length);
+					}
+				}
+				i++;
 			}
 		}
-		return (prob*100+"%");
+		prob*= tensor[i][0][vector[i]];
+		System.out.println(tensor[i][0][vector[i]]);
+		return prob;
+	}
+	
+	public int dimClass() {
+		return tensor[tensor.length-1][0].length;
 	}
 
 	@Override
 	public String toString() {
 		return tree + "\nTensor \n" + Arrays.deepToString(tensor) + "]";
 	}
+	
+	public void main(String[] Args) {
+		
+	}
+	
+	
 }
