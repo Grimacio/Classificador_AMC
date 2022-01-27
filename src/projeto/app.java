@@ -157,13 +157,14 @@ public class app implements Serializable{
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 				
-					C=new Classificador();
+					C=new Classificador(new Amostra());
 					ChooseSample.setEnabled(true);
 					ChooseSample.setText("Choose Sample");
 					CreateBayes.setEnabled(false);
 					ChooseSample.setText("Create Bayes Arborean Tree");
 					Export.setEnabled(false);
 					textArea.setText("");	
+					CreateBayes.setText("Create Bayes Arborean Tree");
 				
 			}
 		});

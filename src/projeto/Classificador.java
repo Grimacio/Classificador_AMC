@@ -9,10 +9,6 @@ public class Classificador {
 		this.A=a;
 		this.G = new Grafos(1);
 	}
-	public Classificador() {
-		this.R= new Bayes();
-		this.G = new Grafos(1);
-	}
 	
 	@Override
 	public String toString() {
@@ -34,32 +30,6 @@ public class Classificador {
 		return R;
 	}
 	
-	public Amostra getA() {
-		return A;
-	}
-
-	public void setA(Amostra a) {
-		A = a;
-	}
-
-	public Grafos getG() {
-		return G;
-	}
-
-	public Bayes getR() {
-		return R;
-	}
-
-	public void setG(Grafos g) {
-		G = g;
-	}
-
-	public void setR(Bayes r) {
-		R = r;
-	}
-	
-	
-
 	public String classify(int[] vector) {
 		double max = 0;
 		int max_index = 0;
