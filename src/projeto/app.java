@@ -99,7 +99,6 @@ public class app implements Serializable{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JFileChooser fileChooser = new JFileChooser();
-		JFileChooser fileChooser2 = new JFileChooser();
 		
 		JButton Export = new JButton("Export Data");
 		Export.setBounds(10, 305, 187, 45);
