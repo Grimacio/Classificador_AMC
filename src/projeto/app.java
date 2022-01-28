@@ -201,8 +201,7 @@ public class app implements Serializable{
 		menu.setLayout(null);
 		
 		JLabel Classifier = new JLabel("");
-		Classifier.setIcon(new ImageIcon(getClass().getResource("/tree_1.png")));
-		
+		Classifier.setIcon(new ImageIcon("C:\\Users\\Asus\\Downloads\\tree (1).png"));
 		
 		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);

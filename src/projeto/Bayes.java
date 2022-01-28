@@ -116,9 +116,6 @@ public class Bayes implements Serializable{
 	}
 //O(1)
 	private double DFO(Amostra amostra, int son, int daddy, int sonValue, int daddyValue, int daddyCount, double s){
-//		int[] vars= {son, daddy};
-//		int[] varsValue = {sonValue, daddyValue};
-//		int intersecao= amostra.count(vars, varsValue);
 		double intersecao;
 		if(son<daddy) {
 			intersecao= (double) amostra.getCountTensor()[son][daddy][sonValue][daddyValue];
