@@ -32,7 +32,7 @@ public class Floresta implements Serializable{
 	}
 	
 //recebe uma floresta e verifica se essa floresta representa uma árvore
-// O(n²*log(n)+n)
+// O(n²*log(n))
 	public boolean treeQ() {
 		boolean floresta = false;
 		int daddy = -1;

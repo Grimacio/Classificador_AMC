@@ -17,7 +17,7 @@ import javax.swing.JTextArea;
 public class app2 {
 
 	private JFrame frame;
-	Classificador C= new Classificador(new Amostra());
+	Classificador C= new Classificador();
 	private JTextArea textArea;
 	long startTime=0;
 	long endTime=0;

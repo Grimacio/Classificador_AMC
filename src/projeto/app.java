@@ -31,11 +31,12 @@ public class app implements Serializable{
 
 	private JFrame frame;
 	private JTextArea textArea;
-	Classificador C= new Classificador(new Amostra());
+	Classificador C= new Classificador();
 	String path;
 	long amostraTime=0, bayesTime=0;
 	long startTime=0;
 	long endTime=0;
+	double s=0;
 	
 	
 	
@@ -117,6 +118,7 @@ public class app implements Serializable{
 						String pseudocontagem = JOptionPane.showInputDialog(frame, "Choose your Pseudocounting");
 						startTime=System.nanoTime();
 						double pseudo = Double.parseDouble(pseudocontagem);
+						C.s=pseudo;
 						C.graph();
 						C.bayes(pseudo);
 						endTime=System.nanoTime();
@@ -166,7 +168,7 @@ public class app implements Serializable{
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 				
-					C=new Classificador(new Amostra());
+					C=new Classificador();
 					ChooseSample.setEnabled(true);
 					ChooseSample.setText("Choose Sample");
 					CreateBayes.setEnabled(false);
@@ -199,7 +201,9 @@ public class app implements Serializable{
 		menu.setLayout(null);
 		
 		JLabel Classifier = new JLabel("");
-		Classifier.setIcon(new ImageIcon("C:\\Users\\Asus\\Downloads\\tree (1).png"));
+		Classifier.setIcon(new ImageIcon(getClass().getResource("/tree_1.png")));
+		
+		
 		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
 		Classifier.setBounds(40, 15, 120, 174);

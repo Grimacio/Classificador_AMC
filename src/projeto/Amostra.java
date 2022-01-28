@@ -47,7 +47,10 @@ class Verify {
 public class Amostra implements Serializable{
 	private static final long serialVersionUID=1L;
 	private ArrayList<int []> list;
-
+	private int[][][][] countTensor;
+	private int[] domain;
+	
+	
 //constroi uma amostra vazia
 	public Amostra() {
 		this.list = new ArrayList<int []>();
@@ -85,11 +88,38 @@ public class Amostra implements Serializable{
 				}
 			}
 		}
+		build();
 	}
+	
+	public int[][][][] getCountTensor() {
+		return countTensor;
+	}
+
 	// O(1)
 	public ArrayList<int[]> getList() {
 			return list;
 		}
+	//O(m² +n*m²)=O(n*m²)
+	public void build() {
+		countTensor= new int[dataDim()-1][dataDim()][][];
+		for (int i = 0; i < dataDim(); i++) {
+			for (int j = i+1; j < dataDim(); j++) {
+				countTensor[i][j]= new int[domain()[i]+1][domain()[j]+1];
+			}
+		}
+		for (int k = 0; k < length(); k++) {
+			for (int i = 0; i < dataDim(); i++) {
+				for (int j = i+1; j < dataDim(); j++) {
+					countTensor[i][j][list.get(k)[i]][list.get(k)[j]]+=1;
+					countTensor[i][j][list.get(k)[i]][domain()[j]]+=1;
+					countTensor[i][j][domain()[i]][list.get(k)[j]]+=1;
+				}
+			}
+		}
+	
+	}
+	
+	
 	// O(1)
 	public void setList(Amostra am) {
 		this.list = am.list;
@@ -145,7 +175,28 @@ public class Amostra implements Serializable{
 			} return max+1;
 		} else throw new RuntimeException("Cannot calculate collumn max for index "+i+ " out of bounds");
 	}
-
+//O(n*m) da primeira vez que corre, depois é O(1)
+	public int[] domain() {
+		if(domain==null) {
+			int[] res= new int[dataDim()];
+			for (int i = 0; i < res.length; i++) {
+				res[i]=0;
+			}
+			for (int i = 0; i < length(); i++) {
+				for (int j = 0; j < dataDim(); j++) {
+					if(list.get(i)[j]> res[j]) {
+						res[j]=list.get(i)[j]; 
+					}
+				}
+			}
+			for (int i = 0; i < res.length; i++) {
+				res[i]=res[i]+1;
+			}
+			this.domain=res;
+		}
+		return domain;
+	}
+	
 	@Override
 	public String toString() {
 		String s="[";
@@ -184,17 +235,7 @@ public class Amostra implements Serializable{
 // é a contagem de ocorrencias em que a variavel daddy é i e son é j. A matriz tem uma linha e coluna extras que são o total de ocorrências 
 // em que daddy é i (coluna) e son é j (linha)
 	
-//O(n²)
-//Fazer funcao que retorne um vetor cujos indices sao as vars e os valores sao os domains
-	public double[][] matrixAux(int son, int daddy) {
-		double[][] matrix= new double[domain(daddy)+1][domain(son)+1];
-		for (int[] element : this.list) {
-			matrix[element[daddy]][element[son]]++;
-			matrix[element[daddy]][domain(son)]++;
-			matrix[domain(daddy)][element[son]]++;
-		}
-		return matrix;
-	}
+
 	
 //retorna o numero de variaveis que os vetores de uma amostra têm
 // O(1)
@@ -205,16 +246,25 @@ public class Amostra implements Serializable{
 	}
 	
 //calcula a informaçao mutua entre duas variaveis, recebendo a matriz de contagens das interseçoes e total
-	//O(domain(daddy)*domain(son)*log n)
+	//O(d*s*log n)
 	public double mutualInfo(int x, int y) {
-		double[][] matrix = matrixAux(x,y);
+		int[][] matrix;
+		if(x<y) {
+			matrix= countTensor[x][y];
+		}else {
+			matrix = countTensor[y][x];
+		}
 		double soma=0;
 		double dim= length();
 		for (int i = 0; i < matrix.length-1; i++) {
 			for (int j = 0; j < matrix[0].length-1; j++) {
 				if(j!=matrix[0].length-1 && i!= matrix.length-1) {
 					if (matrix[i][j]!=0) {
-						soma+= (matrix[i][j]/dim) * Math.log(dim*(matrix[i][j]/(matrix[i][matrix[0].length-1]* matrix[matrix.length-1][j])));
+						double first= (double) matrix[i][j];
+						double dimD= (double) dim;
+						double second= (double) matrix[i][matrix[0].length-1];
+						double third = (double)matrix[matrix.length-1][j];
+						soma+= (first/dimD) * Math.log(dimD*(first/(second* third)));
 					}
 				}
 			}
@@ -241,6 +291,13 @@ public class Amostra implements Serializable{
 				}
 			}
 		}
+		
 		return Alone;
+	}
+	
+	public static void main(String[] Args) {
+		
+		Amostra a= new Amostra("bcancer.csv");
+		System.out.println(Arrays.deepToString(a.getCountTensor()));
 	}
 }

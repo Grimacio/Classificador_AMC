@@ -102,9 +102,9 @@ public class Grafos implements Serializable{
 			pivot = max_index;							//O(1)				//tornar o novo elemento da �rvore no novo pivot
 		}
 
-		if(tree.treeQ()) { // O(n²*log(n)+n)
+		if(tree.treeQ())
 			return tree;
-		} else throw new RuntimeException("Max Tree: Impossible return a tree");
+		else throw new RuntimeException("nao é uma arvore");
 	}
 
 	//O(n)
@@ -121,7 +121,7 @@ public class Grafos implements Serializable{
 	}
 	
 //a partir de uma amostra adiciona no grafo todas as arestas possíveis
-//	O(n³+n²+n)
+//	O(n³)
 	public void build(Amostra amostra) {
 		boolean[] alone = amostra.Alone();
 		for (int i = 0; i < alone.length; i++) {

@@ -6,42 +6,36 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
-
+//they/them
 public class Bayes implements Serializable{
 	private static final long serialVersionUID=1L;
 	private Floresta tree;
 	private double[][][] tensor;
-	private double s;
 
 	public Bayes() {
 		super();
 		tree = null;
-		tensor = new double[1][1][1];
-		s = 0;
 	}
 
 //cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem
 //O(n²(log(n)+ds) +n(ds²+r))
 	public Bayes(Floresta floresta, Amostra amostra, double s) {
 		super();
-		if(!floresta.treeQ()) {
-			throw new RuntimeException("This forest is not a tree");
-		}
 		this.tree=floresta;
-		tensor= tensorConstructor(floresta, amostra, s);
-		this.s=s;
+		this.tensor= tensorConstructor(floresta, amostra, s);
 	}
 	
 //cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem	
 //O(n(ds²+r) + n²ds)
 	public double[][][] tensorConstructor(Floresta floresta, Amostra amostra, double s) {
+		
 		double[][][] Tensor = new double[floresta.size()][][];
 		for (int i = 0; i < floresta.size(); i++) {
 			int daddy= floresta.getForest()[i];
 			if(floresta.isRoot(i)) {
 				Tensor[i]=matrixCondRoot(amostra,i, s); //O(r*n)*1
 			}else {
-			Tensor[i]= matrixCond(amostra,i,daddy,s); //O(ds² + (d+ds)n)(n-1)
+				Tensor[i]= matrixCond(amostra,i,daddy,s); //O(ds² + (d+ds)n)(n-1)
 			}
 		}
 		return Tensor;
@@ -89,43 +83,55 @@ public class Bayes implements Serializable{
 	}
 	//O(r*n)
 	private double[][] matrixCondRoot(Amostra amostra,int root, double s) {
-		double[][] newMatrix= new double[1][amostra.domain(root)];
+		double[][] newMatrix= new double[1][amostra.domain()[root]];
 		for(int j=0; j<newMatrix[0].length;j++) {
 			int[] vars= {root};
 			int[] varsValue = {j};
 			int intersecao= amostra.count(vars, varsValue);
-			newMatrix[0][j] = (intersecao+s)/(amostra.length()+s*amostra.domain(root));
+			newMatrix[0][j] = (intersecao+s)/(amostra.length()+s*amostra.domain()[root]);
 			}
 		return newMatrix;
 	}
 	
-	//O(s+ d*(n+s*(n+s)))=O(ds² + (d+ds)n)
+	//O(d)
 	private double[][] matrixCond(Amostra amostra,int son, int daddy, double s) {
-	
-		double[][] newMatrix= new double[amostra.domain(daddy)][amostra.domain(son)];
+		//System.out.println(daddy+" new daddy ");
+		double[][] newMatrix= new double[amostra.domain()[daddy]][amostra.domain()[son]];
 		for(int i=0;i<newMatrix.length;i++) {
-			int[] vars= {daddy};
-			int[] varsValue = {i};
-			int daddyCount = amostra.count(vars, varsValue);
+//			int[] vars= {daddy};
+//			int[] varsValue = {i};
+//			int daddyCount = amostra.count(vars, varsValue);
+			//System.out.println(daddy+" "+i);
+			int daddyCount;
+			if(daddy==0) {
+				daddyCount= amostra.getCountTensor()[daddy][1][i][amostra.domain()[1]];
+			}else {
+				daddyCount = amostra.getCountTensor()[0][daddy][amostra.domain()[0]][i];
+			}
 			for(int j=0; j<newMatrix[0].length;j++) {
-				
 				newMatrix[i][j]=DFO(amostra, son, daddy, j , i, daddyCount, s);
 			}
 		}
 		return newMatrix;
 	}
-	//O(n+s)
+//O(1)
 	private double DFO(Amostra amostra, int son, int daddy, int sonValue, int daddyValue, int daddyCount, double s){
-		int[] vars= {son, daddy};
-		int[] varsValue = {sonValue, daddyValue};
-		int intersecao= amostra.count(vars, varsValue);
-		return (intersecao+s)/(daddyCount+s*amostra.domain(son));
+//		int[] vars= {son, daddy};
+//		int[] varsValue = {sonValue, daddyValue};
+//		int intersecao= amostra.count(vars, varsValue);
+		double intersecao;
+		if(son<daddy) {
+			intersecao= (double) amostra.getCountTensor()[son][daddy][sonValue][daddyValue];
+		}else {
+			intersecao= (double) amostra.getCountTensor()[daddy][son][daddyValue][sonValue];
+		}
+		return (intersecao+s)/(daddyCount+s*amostra.domain()[son]);
 	}
 	
 	
 // WHAT IS THIS 
 //O(n);
-	public double prob(int[] vector) {
+	public double prob(int[] vector, double s) {
 		int[] vTree= this.tree.getForest();
 		double prob=1;
 		int i = 0;
@@ -163,5 +169,12 @@ public class Bayes implements Serializable{
 		return tree + "\nTensor \n" + Arrays.deepToString(tensor) + "]";
 	}
 	
+	public static void main(String[] Args) {
+		Amostra A= new Amostra("bcancer.csv");
+		Grafos G = new Grafos(A.dataDim());
+		G.build(A);
+		Bayes B = new Bayes(G.max_spanning_tree(), A, 0.5);
+		System.out.println(Arrays.deepToString(B.getTensor()));
+	}
 	
 }

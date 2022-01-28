@@ -6,9 +6,17 @@ public class Classificador {
 	Amostra A;
 	Grafos G;
 	Bayes R;
+	double s;
 	
-	public Classificador(Amostra a) {
+	public Classificador(Amostra a, double s) {
 		this.A=a;
+		this.G = new Grafos(1);
+		this.R = new Bayes();
+		s=this.s;
+	}
+	public Classificador() {
+		this.s=0;
+		this.A= new Amostra();
 		this.G = new Grafos(1);
 		this.R = new Bayes();
 	}
@@ -37,7 +45,7 @@ public class Classificador {
 		int i = 0;
 		while (i < (R.dimClass())) {
 			vector[vector.length-1]=i;
-			double max_aux = R.prob(vector);
+			double max_aux = R.prob(vector, s);
 			prob[i] = max_aux;
 			if (max_aux > max) {
 				max=max_aux;
@@ -61,7 +69,7 @@ public class Classificador {
 				}
 			}
 		}
-		Classificador Cl = new Classificador(am);
+		Classificador Cl = new Classificador(am,0);
 		Cl.graph();
 		Cl.bayes(0.5);
 		int indiceReal= vector[(vector.length-1)];
