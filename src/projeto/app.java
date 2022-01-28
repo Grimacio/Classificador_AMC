@@ -67,7 +67,6 @@ public class app implements Serializable{
 	 */
 	
 	private void initialize() {	
-		System.out.println(C);
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));

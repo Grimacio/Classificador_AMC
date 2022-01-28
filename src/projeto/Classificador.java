@@ -80,13 +80,13 @@ public class Classificador {
 	}
 	
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Classificador C= new Classificador(new Amostra("diabetes.csv"));
-		System.out.println(C.leaveOneOut());
-		
-		
-	}
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		Classificador C= new Classificador(new Amostra("diabetes.csv"));
+//		System.out.println(C.leaveOneOut());
+//		
+//		
+//	}
 }
 	
 

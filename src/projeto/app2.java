@@ -122,7 +122,7 @@ public class app2 {
 				String resultado="Resultado= "+indice+" com probabilidade "+ res[1]+"%";
 				endTime = System.nanoTime();
 				time= (endTime-startTime);
-				textArea.setText(resultado + "\n------> "+ time + "nanossegundos");
+				textArea.setText(resultado + "\n------> "+ time + " nanossegundos");
 				
 			}
 		});
