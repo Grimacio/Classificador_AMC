@@ -80,7 +80,6 @@ public class app2 {
 					int r = fileChooserUSED.showOpenDialog((Component)e.getSource());
 					if (r==fileChooserUSED.APPROVE_OPTION) {
 						C.R.readBayes(fileChooserUSED.getSelectedFile().getAbsolutePath());
-						System.out.println(C.R.getTensor()==null);
 						textArea.setText(Arrays.deepToString(C.R.getTensor()).replace("],", "], \n "));
 					}
 			}
@@ -99,7 +98,7 @@ public class app2 {
 					int var = Integer.parseInt(variable);
 					vector[i] = var;
 				}
-				startTime = System.nanoTime();
+				
 //				double max = 0;
 //				int max_index = 0;
 //				double[] prob = new double[R.dimClass()];
@@ -116,10 +115,14 @@ public class app2 {
 //					}
 //					i=i+1;
 //				}
-				String resultado=C.classify(vector);
+				startTime = System.nanoTime();
+				double[] res= C.classify(vector);
+				endTime = System.nanoTime();
+				int indice = (int) res[0];
+				String resultado="Resultado= "+indice+" com probabilidade "+ res[1]+"%";
 				endTime = System.nanoTime();
 				time= (endTime-startTime);
-				textArea.setText(resultado + "\n------> "+ time + "ms");
+				textArea.setText(resultado + "\n------> "+ time + "nanossegundos");
 				
 			}
 		});

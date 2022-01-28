@@ -1,5 +1,7 @@
 package projeto;
 
+import java.util.Arrays;
+
 public class Classificador {
 	Amostra A;
 	Grafos G;
@@ -18,7 +20,6 @@ public class Classificador {
 	public Grafos graph() {
 		Grafos g= new Grafos(A.dataDim());
 		g.build(A);
-		System.out.println(g);
 		this.G = g;
 		return this.G;
 	}
@@ -29,7 +30,7 @@ public class Classificador {
 		return R;
 	}
 	
-	public String classify(int[] vector) {
+	public double[] classify(int[] vector) {
 		double max = 0;
 		int max_index = 0;
 		double[] prob = new double[R.dimClass()];
@@ -44,17 +45,48 @@ public class Classificador {
 			}
 			i=i+1;
 		}
-		return "result = "+max_index+", with probabilty of "+(max*100)+"%";
+		double[]res = {max_index, max*100};
+		return res;
+	}
+	
+	public boolean leaveOneOut(int[] vector) {
+		Amostra am= new Amostra();
+		boolean found=false;
+		for(int[] element :A.getList()) {
+			if(found || element!=vector) {
+				am.add(element);
+			}else {
+				if(vector==element) {
+					found=true;
+				}
+			}
+		}
+		Classificador Cl = new Classificador(am);
+		Cl.graph();
+		Cl.bayes(0.5);
+		int indiceReal= vector[(vector.length-1)];
+		int indiceGuess= (int) Cl.classify(vector)[0];
+		return indiceGuess == indiceReal;
+	}
+	
+	public double leaveOneOut() {
+		double counter=0;
+		for(int[] v : A.getList()) {
+			if(leaveOneOut(v)) {
+				counter++;
+			}
+		}
+		return (counter/A.length())*100;
 	}
 	
 	
-//	public static void main(String[] args) {
-//		// TODO Auto-generated method stub
-//		Classificador C= new Classificador(new Amostra("bcancer.csv"));
-//		C.graph();
-//		System.out.println(C.G);
-//		
-//	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Classificador C= new Classificador(new Amostra("diabetes.csv"));
+		System.out.println(C.leaveOneOut());
+		
+		
+	}
 }
 	
 

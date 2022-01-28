@@ -159,6 +159,7 @@ public class Amostra implements Serializable{
 // retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
 // O(n*m), n= # elementos da amostra, m= # dataDim()
 	public int count(int[] v, int[] w) {
+		if(v.length==w.length) {
 		int contador=0;	
 		int i=0;
 		while(i<length()) {
@@ -176,6 +177,7 @@ public class Amostra implements Serializable{
 			i++;
 		}
 		return contador;
+		}else throw new RuntimeException("Count: given vectors don't have equal dimensions");
 	}
 
 // recebe duas variaveis e retorna a matriz cujas linhas sao os valores de uma variavel e as colunas os valores da outra, cada entrada ij
@@ -208,8 +210,8 @@ public class Amostra implements Serializable{
 		double[][] matrix = matrixAux(x,y);
 		double soma=0;
 		double dim= length();
-		for (int i = 0; i < matrix.length; i++) {
-			for (int j = 0; j < matrix[0].length; j++) {
+		for (int i = 0; i < matrix.length-1; i++) {
+			for (int j = 0; j < matrix[0].length-1; j++) {
 				if(j!=matrix[0].length-1 && i!= matrix.length-1) {
 					if (matrix[i][j]!=0) {
 						soma+= (matrix[i][j]/dim) * Math.log(dim*(matrix[i][j]/(matrix[i][matrix[0].length-1]* matrix[matrix.length-1][j])));
