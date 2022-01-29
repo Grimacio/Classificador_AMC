@@ -149,13 +149,14 @@ public class app implements Serializable{
 				if (r==fileChooser.APPROVE_OPTION){
 					path=fileChooser.getSelectedFile().getAbsolutePath();
 					startTime=System.nanoTime();
-					C.A=new Amostra(fileChooser.getSelectedFile().getAbsolutePath());
+					C.A=new Amostra(path);
 					endTime=System.nanoTime();
+					textArea.setText(C.A.toString().replace("],", "], \n ")+ "["+((endTime-startTime)/1000000)+"ms]");
 					amostraTime= (endTime-startTime)/1000000;
 					ChooseSample.setText("Amostra Escolhida");
 					ChooseSample.setEnabled(false);
 					CreateBayes.setEnabled(true);
-					textArea.setText(C.A.toString().replace("],", "], \n ")+ "["+amostraTime+"ms]");	
+						
 				}
 			}
 		});
