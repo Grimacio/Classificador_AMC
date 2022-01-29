@@ -14,7 +14,7 @@ public class Grafos implements Serializable{
 // FUNCOES SUGERIDAS
 
 //constroi um grafo com nos
-//O(n), n=#nos
+//O(n), n=nos
 	@SuppressWarnings("unchecked")
 	public Grafos(int n) {
 		super();
@@ -27,7 +27,7 @@ public class Grafos implements Serializable{
 		} else throw new RuntimeException("Graph: Cannot create graph with negative dimensions");
 	}
 	
-//adiciona no grafo uma aresta com um certo custo entre dois nós
+//adiciona no grafo uma aresta com um certo custo entre dois nos
 //O(1)
 	public void add_edge(int x, int y, double cost) {
 		if(x < dim && y < dim && x >= 0 && y >= 0) {
@@ -38,7 +38,7 @@ public class Grafos implements Serializable{
 		} else throw new RuntimeException("Graph: Cannot add edge with dimensions out of bounds");
 	}	
 	
-//transforma um grafo numa árvore com o maior peso possível nas suas arestas
+//transforma um grafo numa arvore com o maior peso possível nas suas arestas
 // deve dar para fazer melhor
 //O(n²(n+logn))	
 	public Floresta max_spanning_tree() {
@@ -128,11 +128,12 @@ public class Grafos implements Serializable{
 	@Override
 	public String toString() {
 		return dim+" "+ Arrays.deepToString(graph);
-	}
-	
+	}	
+}
 
-	
-}class Adj {
+
+
+class Adj {
 	private int node;
 	private double cost;
 	
