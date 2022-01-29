@@ -4,35 +4,15 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-class Adj {
-	private int node;
-	private double cost;
-	
-	public Adj(int node, double cost) {
-		super();
-		this.node = node;
-		this.cost = cost;
-	}
-	//O(1)
-	public int getNode() {
-		return node;
-	}
-	//O(1)
-	public double getCost() {
-		return cost;
-	}
-
-	@Override
-	public String toString() {
-		return "(" + node + " , " + cost + ")";
-	}
-}
 
 public class Grafos implements Serializable{
 	private static final long serialVersionUID=1L;
 	private LinkedList<Adj>[] graph;
 	private int dim;
+
 	
+// FUNCOES SUGERIDAS
+
 //constroi um grafo com nos
 //O(n), n=#nos
 	@SuppressWarnings("unchecked")
@@ -47,24 +27,8 @@ public class Grafos implements Serializable{
 		} else throw new RuntimeException("Graph: Cannot create graph with negative dimensions");
 	}
 	
-	public LinkedList<Adj>[] getGraph() {
-		return graph;
-	}
-
-	public int getDim() {
-		return dim;
-	}
-
-	public void setGraph(LinkedList<Adj>[] graph) {
-		this.graph = graph;
-	}
-
-	public void setDim(int dim) {
-		this.dim = dim;
-	}
-
-	//adiciona no grafo uma aresta com um certo custo entre dois nós
-	//O(1)
+//adiciona no grafo uma aresta com um certo custo entre dois nós
+//O(1)
 	public void add_edge(int x, int y, double cost) {
 		if(x < dim && y < dim && x >= 0 && y >= 0) {
 			Adj n = new Adj(y,cost);
@@ -72,11 +36,11 @@ public class Grafos implements Serializable{
 			n = new Adj(x,cost);
 			graph[y].add(n);
 		} else throw new RuntimeException("Graph: Cannot add edge with dimensions out of bounds");
-	}
+	}	
 	
 //transforma um grafo numa árvore com o maior peso possível nas suas arestas
 // deve dar para fazer melhor
-//O(n²(n+logn))
+//O(n²(n+logn))	
 	public Floresta max_spanning_tree() {
 		Floresta tree = new Floresta(dim);		//O(n) , n=nos				//floresta com os nos {0,...,dim} (sem arestas)
 		double[] adj = new double[dim];			//O(1)			//lista onde se atualiza o peso das arestas dos nos adjacentes
@@ -119,7 +83,11 @@ public class Grafos implements Serializable{
 			}
 		}
 		return max_index;
-	}
+	}	
+
+	
+	
+// FUNCOES EXTRA	
 	
 //a partir de uma amostra adiciona no grafo todas as arestas possíveis
 //	O(n²*d*s)
@@ -138,8 +106,60 @@ public class Grafos implements Serializable{
 		}
 	}
 	
+	
+// SETTER, GETTERS & TO STRING	
+	
+	public LinkedList<Adj>[] getGraph() {
+		return graph;
+	}
+
+	public int getDim() {
+		return dim;
+	}
+
+	public void setGraph(LinkedList<Adj>[] graph) {
+		this.graph = graph;
+	}
+
+	public void setDim(int dim) {
+		this.dim = dim;
+	}
+	
 	@Override
 	public String toString() {
 		return dim+" "+ Arrays.deepToString(graph);
+	}
+	
+
+	
+}class Adj {
+	private int node;
+	private double cost;
+	
+	
+// CONSTRUTOR	
+	
+	public Adj(int node, double cost) {
+		super();
+		this.node = node;
+		this.cost = cost;
+	}
+	
+	
+	
+// SETTES, GETTERS & TO STRING	
+	
+	//O(1)
+	public int getNode() {
+		return node;
+	}
+	//O(1)
+	public double getCost() {
+		return cost;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + node + " , " + cost + ")";
 	}
 }
