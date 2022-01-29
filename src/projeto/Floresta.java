@@ -9,6 +9,9 @@ public class Floresta implements Serializable{
 	private static final long serialVersionUID=1L;
 	private int[] v;
 	
+
+// FUNCOES SUGERIDAS	
+	
 //constrói uma floresta com n nós independentes
 	//O(n);
 	public Floresta(int n) {
@@ -64,6 +67,10 @@ public class Floresta implements Serializable{
 		return visited;
 	}
 	
+	
+	
+// FUNCOES EXTRA	
+	
 //transforma o nó i na raiz de uma árvore
 //O(1)
 	public boolean isRoot(int i) {
@@ -75,6 +82,10 @@ public class Floresta implements Serializable{
 	public int size() {
 		return v.length;
 	}
+
+	
+	
+// GETTERS, SETTERS & TO STRING	
 	
 //retorna a floresta
 //O(1)
