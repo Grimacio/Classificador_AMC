@@ -11,137 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-class Verify {
-	private int value;
-	private boolean isIt;
-	
-	public Verify(int v) {
-		super();
-		value= v;
-		isIt= true;
-	}
-	
-	public boolean isAlone() {
-		return isIt;
-	}
-	
-	public int getValue() {
-		return value;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-	public void setIsIt(boolean isIt) {
-		this.isIt = isIt;
-	}
-
-	@Override
-	public String toString() {
-		return "Verify [value=" + value + ", isIt=" + isIt + "]";
-	}
-	
-}
-
 public class Amostra implements Serializable{
 	private static final long serialVersionUID=1L;
 	private ArrayList<int []> list;
 	private int[][][][] countTensor;
 	private int[] domain;
 	
+//FUNÇÕES SUGERIDAS	
 	
-//constroi uma amostra vazia
-	public Amostra() {
-		this.list = new ArrayList<int []>();
-	}
-	
-//constroi uma amostra apartir de um ficheiro .csv
-	public Amostra(String csvFile) {
-		this.list = new ArrayList<int []>();;
-
-		BufferedReader br = null;
-		String line = "";
-		String cvsSplitBy = ",";
-
-		try {br = new BufferedReader(new FileReader(csvFile));
-			while ((line = br.readLine()) != null) {
-
-				// use comma as separator
-				String[] country     = line.split(cvsSplitBy);
-				int[] stringToIntVec = new int[country.length];
-				for (int i = 0; i < country.length; i++)
-					stringToIntVec[i] = Integer.parseInt(country[i]);	
-				add(stringToIntVec);
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		build();
-	}
-	
-	public void setCountTensor(int[][][][] countTensor) {
-		this.countTensor = countTensor;
-	}
-
-	public int[][][][] getCountTensor() {
-		return countTensor;
-	}
-
-	// O(1)
-	public ArrayList<int[]> getList() {
-			return list;
-		}
-	//O(n*m²)
-	public void build() {
-		countTensor= new int[dataDim()-1][dataDim()][][];
-		for (int i = 0; i < dataDim()-1; i++) {
-			for (int j = i+1; j < dataDim(); j++) {
-				countTensor[i][j]= new int[domain()[i]+1][domain()[j]+1];
-			}
-		}
-		for (int k = 0; k < length(); k++) {
-			for (int i = 0; i < dataDim()-1; i++) {
-				for (int j = i+1; j < dataDim(); j++) {
-					countTensor[i][j][list.get(k)[i]][list.get(k)[j]]+=1;
-					countTensor[i][j][list.get(k)[i]][domain()[j]]+=1;
-					countTensor[i][j][domain()[i]][list.get(k)[j]]+=1;
-				}
-			}
-		}
-	
-	}
-	
-	
-	// O(1)
-	public void setList(Amostra am) {
-		this.list = am.list;
-	}
-	
-	public void readAm(String path) { // iii
-		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
-			Amostra amostra = (Amostra) ois.readObject();
-			this.setList(amostra);
-			ois.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	//adiciona um vetor a amostra se tiver as dimensoes certas
+//adiciona um vetor a amostra se tiver as dimensoes certas
 	//O(1)
 	public void add (int[] v){
 		if(list.isEmpty() && v.length!=0) {
@@ -163,81 +41,116 @@ public class Amostra implements Serializable{
 // O(1)
 	public int[] element(int i) {
 		if(i>=0 && i<length()) {
-			return list.get(i);
+		return list.get(i);
 		} else throw new RuntimeException("Cannot calculate element for index out of bounds");
 	}
 
-// retorna o número de valores que uma variavel pode assumir nesta amostra, assumindo que varia entre 0 e o seu valor maximo 
-// O(n)	
+// retorna o numero de variaveis no que o no i pode assumir
+// O(n*m) da primeira vez que é chamado
+// O(1) todo o resto das vezes que é chamado
 	public int domain(int i) {
-		if(i>=0 && i<dataDim()) {
-			int max = 0;
-			for(int[] x : this.list) {
-				if(x[i] > max) {
-					max = x[i];
-				}
-			} return max+1;
-		} else throw new RuntimeException("Cannot calculate collumn max for index "+i+ " out of bounds");
-	}
-//O(n*m) da primeira vez que corre, depois é O(1)
-	public int[] domain() {
 		if(domain==null) {
-			int[] res= new int[dataDim()];
-			for (int i = 0; i < res.length; i++) {
-				res[i]=0;
-			}
-			for (int i = 0; i < length(); i++) {
-				for (int j = 0; j < dataDim(); j++) {
-					if(list.get(i)[j]> res[j]) {
-						res[j]=list.get(i)[j]; 
-					}
-				}
-			}
-			for (int i = 0; i < res.length; i++) {
-				res[i]=res[i]+1;
-			}
-			this.domain=res;
-		}
-		return domain;
-	}
-	
-	@Override
-	public String toString() {
-		String s="[";
-		if (list.size()>0) s+=Arrays.toString(list.get(0));
-		for (int i=1; i<list.size();i++)
-			s+=","+Arrays.toString(list.get(i));
-		s+="]";
-	return s;
+			domain();
+		} return domain[i];
 	}
 
-//Não usamos o count de todo, preferimos sempre usar o tensor pois evita que tenhamos que fazer counts desnecessários
+//O(n*m) da primeira vez que corre, depois Ã© O(1)
+	private void domain() {
+		int[] res= new int[dataDim()];
+		for (int i = 0; i < res.length; i++) {
+			res[i]=0;
+		}
+		for (int i = 0; i < length(); i++) {
+			for (int j = 0; j < dataDim(); j++) {
+				if(list.get(i)[j]> res[j]) {
+					res[j]=list.get(i)[j]; 
+				}
+			}
+		}
+		for (int i = 0; i < res.length; i++) {
+			res[i]=res[i]+1;
+		}
+		this.domain=res;
+	}	
+	
+//nao usamos o count de todo, preferimos sempre usar o tensor pois evita que tenhamos que fazer counts desnecessarios
 // retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
 // O(n*m), n= # elementos da amostra, m= # dataDim()
 	public int count(int[] v, int[] w) {
 		if(v.length==w.length) {
-		int contador=0;	
-		int i=0;
-		while(i<length()) {
-			boolean nice=true;
-			int j=0;
-			while(j<v.length && nice) {
-				if(list.get(i)[v[j]]!= w[j]) {
-					nice=false;
+			if(v.length==2) {
+				return countTensor[v[0]][v[1]][w[0]][w[1]];
+			} else {
+				int contador=0;	
+				int i=0;
+				while(i<length()) {
+					boolean nice=true;
+					int j=0;
+					while(j<v.length && nice) {
+						if(list.get(i)[v[j]]!= w[j]) {
+							nice=false;
+						}
+						j++;
+					}
+					if(nice) {
+						contador++;
+					}
+					i++;
 				}
-				j++;
+				return contador;
 			}
-			if(nice) {
-				contador++;
-			}
-			i++;
-		}
-		return contador;
-		}else throw new RuntimeException("Count: given vectors don't have equal dimensions");
+		} else throw new RuntimeException("Count: given vectors don't have equal dimensions");
 	}
+	
+	
+	
+// CONSTRUTORES
+	
+//constroi uma amostra vazia
+	public Amostra() {
+		this.list = new ArrayList<int []>();
+	}
+		
+//constroi uma amostra apartir de um ficheiro .csv
+	public Amostra(String csvFile) {
+		this.list = new ArrayList<int []>();;
+		
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+
+		try {br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+
+				// use comma as separator
+				String[] country     = line.split(cvsSplitBy);
+				int[] stringToIntVec = new int[country.length];
+				for (int i = 0; i < country.length; i++)
+					stringToIntVec[i] = Integer.parseInt(country[i]);	
+					add(stringToIntVec);
+				}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		build();
+	}	
 
 	
-//retorna o numero de variaveis que os vetores de uma amostra têm
+	
+// FUNCOES EXTRA
+	
+//retorna o numero de variaveis dos da amostra
 // O(1)
 	public int dataDim() {
 		if(list!=null) {
@@ -245,8 +158,8 @@ public class Amostra implements Serializable{
 		}else throw new RuntimeException("Cannot calculate data dimension for not existent sample");
 	}
 	
-//calcula a informaçao mutua entre duas variaveis, recebendo a matriz de contagens das interseçoes e total
-	//O(d*s)
+//calcula a informaÃ§ao mutua entre duas variaveis, recebendo a matriz de contagens das interseÃ§oes e total
+//O(d*s)
 	public double mutualInfo(int x, int y) {
 		int[][] matrix;
 		if(x<y) {
@@ -261,10 +174,9 @@ public class Amostra implements Serializable{
 				if(j!=matrix[0].length-1 && i!= matrix.length-1) {
 					if (matrix[i][j]!=0) {
 						double first= (double) matrix[i][j];
-						double dimD= dim;
 						double second= (double) matrix[i][matrix[0].length-1];
 						double third = (double)matrix[matrix.length-1][j];
-						soma+= (first/dimD) * Math.log(dimD*(first/(second* third)));
+						soma+= (first/dim) * Math.log(dim*(first/(second* third)));
 					}
 				}
 			}
@@ -272,33 +184,147 @@ public class Amostra implements Serializable{
 		return soma;
 	}
 	
-	// retorna as variáveis onde existe apenas um único valor ao longo de toda a amostra
-	//!!! deve dar para usar o tensor para tornar mais eficiente
-	// O(dataDim()*n)
+// retorna as variÃ¡veis onde existe apenas um Ãºnico valor ao longo de toda a amostra
+//!!! deve dar para usar o tensor para tornar mais eficiente
+//O(dataDim*domain(k)*domain(0))
 	public boolean[] Alone() {
-		Verify[] res = new Verify[dataDim()];
-		boolean[] Alone = new boolean[dataDim()];
-		for (int i=0; i< res.length; i++) {
-			res[i] = new Verify(list.get(0)[i]);
-			Alone[i] = true;
-		}
-		for (int i=1; i<length(); i++) {
-			for (int j=0; j< res.length; j++) {
-				if(res[j].isAlone()) {
-					if(res[j].getValue() != element(i)[j]) {
-						res[j].setIsIt(false);
-						Alone[j] = false;
+		if(dataDim()>1) {	
+			boolean[] Alone = new boolean[dataDim()];
+			int aux;
+			for (int k = 0; k < dataDim(); k++) {
+				aux = 0;
+				for (int i = 0; i < domain(k) & aux <= 1 ; i++) {
+					boolean find = false;
+					if (k == 0) {
+						for (int j = 0; j < domain(1) & !find; j++) {
+							if (countTensor[0][1][i][j] != 0) {
+								aux++;
+								find = true;
+							}
+						}
+					} else {
+						for (int j = 0; j < domain(0) & !find; j++) {
+							if (countTensor[0][k][j][i] != 0) {
+								aux++;
+								find = true;
+							}
+						}
 					}
+				}
+				Alone[k] = (aux <= 1);
+			}
+			return Alone;
+		} else throw new AssertionError ("Alone: Dumb ass, you're trying to do this with just 1 atribute");
+	}
+	
+//O(n*m²)
+	public void build() {
+		countTensor= new int[dataDim()-1][dataDim()][][];
+		for (int i = 0; i < dataDim()-1; i++) {
+			for (int j = i+1; j < dataDim(); j++) {
+				countTensor[i][j]= new int[domain(i)+1][domain(j)+1];
+			}
+		}
+		for (int k = 0; k < length(); k++) {
+			for (int i = 0; i < dataDim()-1; i++) {
+				for (int j = i+1; j < dataDim(); j++) {
+					countTensor[i][j][list.get(k)[i]][list.get(k)[j]]+=1;
+					countTensor[i][j][list.get(k)[i]][domain(j)]+=1;
+					countTensor[i][j][domain(i)][list.get(k)[j]]+=1;
 				}
 			}
 		}
-		
-		return Alone;
+	}
+
+	
+	
+//SETTERS, GETTERS & TO STRING
+	
+// O(1)	
+	public void setCountTensor(int[][][][] countTensor) {
+		this.countTensor = countTensor;
+	}
+// O(1)
+	public int[][][][] getCountTensor() {
+		return countTensor;
+	}
+// O(1)
+	public ArrayList<int[]> getList() {
+		return list;
 	}
 	
-	public static void main(String[] Args) {
-		
-		Amostra a= new Amostra("letter.csv");
-		System.out.println(Arrays.deepToString(a.getCountTensor()));
+// O(1)
+	public void setList(Amostra am) {
+		this.list = am.list;
 	}
+
+	@Override
+	public String toString() {
+		String s="[";
+		if (list.size()>0) s+=Arrays.toString(list.get(0));
+		for (int i=1; i<list.size();i++)
+			s+=","+Arrays.toString(list.get(i));
+		s+="]";
+	return s;
+	}
+	
+	
+
+// READ
+	
+	public void readAm(String path) { // iii
+		try {
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+			Amostra amostra = (Amostra) ois.readObject();
+			this.setList(amostra);
+			ois.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+}
+
+
+
+class Verify {
+	private int value;
+	private boolean isIt;
+	
+	
+	
+// CONSTRUTOR
+	
+	public Verify(int v) {
+		super();
+		value= v;
+		isIt= true;
+	}
+	
+	
+	
+// SETTER, GETTERS & TO STRING
+	
+	public boolean isAlone() {
+		return isIt;
+	}
+	
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public void setIsIt(boolean isIt) {
+		this.isIt = isIt;
+	}
+
+	@Override
+	public String toString() {
+		return "Verify [value=" + value + ", isIt=" + isIt + "]";
+	}
+
 }
