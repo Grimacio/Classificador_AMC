@@ -69,10 +69,10 @@ public class Classificador {
 		int[][][][] backup = A.getCountTensor();
 		a.setCountTensor(backup);
 		a.setList(A);
-		for(int k=0; k<A.length(); k++) {
+		for(int k=0; k<A.length(); k=k+1) {
 			int[] nextEl= A.element(k);
-			for(int i=0; i<A.dataDim()-1; i++) {
-				for(int j=i+1; j<A.dataDim(); j++) {
+			for(int i=0; i<A.dataDim()-1; i=i+1) {
+				for(int j=i+1; j<A.dataDim(); j=j+1) {
 					a.getCountTensor()[i][j][nextEl[i]][nextEl[j]]-=1;
 					a.getCountTensor()[i][j][nextEl[i]][A.domain()[j]]-=1;
 					a.getCountTensor()[i][j][A.domain()[i]][nextEl[j]]-=1;
@@ -80,11 +80,11 @@ public class Classificador {
 			}
 			Classificador Cl = new Classificador(a,0.5);
 			if(Cl.run(nextEl)==nextEl[nextEl.length-1]) {
-				contador++;
+				contador=contador+1;
 			}
 			
-			for(int i=0; i<A.dataDim()-1; i++) {
-				for(int j=i+1; j<A.dataDim(); j++) {
+			for(int i=0; i<A.dataDim()-1; i=i+1) {
+				for(int j=i+1; j<A.dataDim(); j=j+1) {
 					a.getCountTensor()[i][j][nextEl[i]][nextEl[j]]+=1;
 					a.getCountTensor()[i][j][nextEl[i]][A.domain()[j]]+=1;
 					a.getCountTensor()[i][j][A.domain()[i]][nextEl[j]]+=1;

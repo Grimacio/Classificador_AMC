@@ -125,13 +125,13 @@ public class Grafos implements Serializable{
 //	O(n²*d*s)
 	public void build(Amostra amostra) {
 		boolean[] alone = amostra.Alone();
-		for (int i = 0; i < alone.length; i++) { //O(n)
+		for (int i = 0; i < alone.length; i=i+1) { //O(n)
 			if (alone[i] == false) {
-				for (int j = i+1; j < alone.length; j++) {	 //O(n)
+				for (int j = i+1; j < alone.length; j=j+1) {	 //O(n)
 					add_edge(i, j, amostra.mutualInfo(i,j)); //O(d*s)
 				}
 			} else {
-				for (int j = i+1; j < alone.length; j++) {
+				for (int j = i+1; j < alone.length; j=j+1) {
 					add_edge(i, j, 0);
 				}
 			}

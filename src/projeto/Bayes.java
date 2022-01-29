@@ -30,7 +30,7 @@ public class Bayes implements Serializable{
 	public double[][][] tensorConstructor(Floresta floresta, Amostra amostra, double s) {
 		
 		double[][][] Tensor = new double[floresta.size()][][];
-		for (int i = 0; i < floresta.size(); i++) {
+		for (int i = 0; i < floresta.size(); i=i+1) {
 			int daddy= floresta.getForest()[i];
 			if(floresta.isRoot(i)) {
 				Tensor[i]=matrixCondRoot(amostra,i, s); //O(r*n)
@@ -84,7 +84,7 @@ public class Bayes implements Serializable{
 	//O(r*n)
 	private double[][] matrixCondRoot(Amostra amostra,int root, double s) {
 		double[][] newMatrix= new double[1][amostra.domain()[root]];
-		for(int j=0; j<newMatrix[0].length;j++) {
+		for(int j=0; j<newMatrix[0].length;j=j+1) {
 //			int[] vars= {root};
 //			int[] varsValue = {j};
 			double intersecao;//= amostra.count(vars, varsValue);
@@ -98,14 +98,14 @@ public class Bayes implements Serializable{
 	private double[][] matrixCond(Amostra amostra,int son, int daddy, double s) {
 		//System.out.println(daddy+" new daddy ");
 		double[][] newMatrix= new double[amostra.domain()[daddy]][amostra.domain()[son]];
-		for(int i=0;i<newMatrix.length;i++) {
+		for(int i=0;i<newMatrix.length;i=i+1) {
 			int daddyCount;
 			if(daddy==0) {
 				daddyCount= amostra.getCountTensor()[daddy][1][i][amostra.domain()[1]];
 			}else {
 				daddyCount = amostra.getCountTensor()[0][daddy][amostra.domain()[0]][i];
 			}
-			for(int j=0; j<newMatrix[0].length;j++) {
+			for(int j=0; j<newMatrix[0].length;j=j+1) {
 				newMatrix[i][j]=DFO(amostra, son, daddy, j , i, daddyCount, s);
 			}
 		}
@@ -136,21 +136,21 @@ public class Bayes implements Serializable{
 					int babyVal= vector[i]; 
 					if (vector[daddy] < tensor[i].length) {
 						int daddyVal = vector[daddy];
-						prob*=tensor[i][daddyVal][babyVal];
+						prob=prob* tensor[i][daddyVal][babyVal];
 					} else {
-						prob*=s/(s*tensor[i][0].length);
+						prob=prob*(s/(s*tensor[i][0].length));
 					}
 				} else {
 					if (vector[daddy] < tensor[i].length) {
-						prob*=s/(tensor[i][vector[daddy]][tensor[i][0].length-1]+s*tensor[i][0].length);
+						prob=prob *(s/(tensor[i][vector[daddy]][tensor[i][0].length-1]+s*tensor[i][0].length));
 					} else {
-						prob*=s/(s*tensor[i][0].length);
+						prob=prob*(s/(s*tensor[i][0].length));
 					}
 				}
-				i++;
+				i=i+1;
 			}
 		}
-		prob*= tensor[i][0][vector[i]];
+		prob=prob* tensor[i][0][vector[i]];
 		return prob;
 	}
 	//O(1)
