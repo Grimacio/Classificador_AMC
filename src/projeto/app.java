@@ -151,11 +151,14 @@ public class app implements Serializable{
 					startTime=System.nanoTime();
 					C.A=new Amostra(path);
 					endTime=System.nanoTime();
-					textArea.setText(C.A.toString().replace("],", "], \n ")+ "["+((endTime-startTime)/1000000)+"ms]");
-					amostraTime= (endTime-startTime)/1000000;
 					ChooseSample.setText("Amostra Escolhida");
 					ChooseSample.setEnabled(false);
 					CreateBayes.setEnabled(true);
+					textArea.setText("["+((endTime-startTime)/1000000)+"ms]");
+					String text=C.A.toString().replace("],", "], \n ")+"\n["+((endTime-startTime)/1000000)+"ms]";
+					textArea.setText(text);
+					amostraTime= (endTime-startTime)/1000000;
+					
 						
 				}
 			}
