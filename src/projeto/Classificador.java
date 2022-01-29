@@ -1,7 +1,5 @@
 package projeto;
 
-import java.util.Arrays;
-
 public class Classificador {
 	Amostra A;
 	Grafos G;
