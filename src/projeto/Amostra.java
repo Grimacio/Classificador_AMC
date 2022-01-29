@@ -17,7 +17,7 @@ public class Amostra implements Serializable{
 	private int[][][][] countTensor;
 	private int[] domain;
 	
-//FUNÇÕES SUGERIDAS	
+//FUNCOES SUGERIDAS	
 	
 //adiciona um vetor a amostra se tiver as dimensoes certas
 	//O(1)
