@@ -63,7 +63,6 @@ public class Classificador {
 		return res;
 	}
 	//bruh foi so trocar para o tensor e ja deu
-	/*acho que está idk
 	public float leaveOneOut() {
 		float contador=0;
 		Amostra a= new Amostra();
@@ -92,10 +91,10 @@ public class Classificador {
 				}
 			}
 		}
-		System.out.println(contador);
+
 		return (contador/A.length())*100;
 	}
-	*/
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

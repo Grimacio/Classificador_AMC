@@ -53,7 +53,7 @@ public class app2 {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setForeground(new Color(0, 128, 128));
-		frame.setBounds(100, 100, 461, 358);
+		frame.setBounds(100, 100, 597, 358);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
@@ -65,7 +65,7 @@ public class app2 {
 		
 		JScrollPane scroll = new JScrollPane(textArea,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroll.setBounds(31, 67, 388, 215);
+		scroll.setBounds(31, 67, 480, 215);
 		//scroll.setSize( 100, 100 );
 		frame.getContentPane().add(scroll);
 		frame.setVisible (true);
@@ -129,6 +129,29 @@ public class app2 {
 		});
 		
 		frame.getContentPane().add(btnNewButton_1);
+		
+		JButton btnLeaveoneout = new JButton("LeaveOneOut");
+		btnLeaveoneout.setBounds(362, 289, 149, 25);
+		btnLeaveoneout.addActionListener(new ActionListener() {
+			@SuppressWarnings("static-access")
+			public void actionPerformed(ActionEvent e) {
+					String LOOres="";
+					String[] ficheiros= {"bcancer.csv","diabetes.csv","hepatitis.csv","iris.csv", "letter.csv", "satimage.csv", "soybean-large.csv", "thyroid.csv"};
+					long startTime= System.nanoTime();
+					for(String ficheiro : ficheiros) {
+						Classificador ClTemp= new Classificador(new Amostra(ficheiro),0.5);
+						ClTemp.graph();
+						ClTemp.bayes(0.5);
+						LOOres=LOOres+ "\n"+ ficheiro.replace(".csv", "").replace("large","l")+ " \t Precisao:"+ClTemp.leaveOneOut()+"%";
+						
+					}
+					long endTime= System.nanoTime();
+					double tempoLOO=((endTime-startTime)/1000000);
+					textArea.setText(LOOres+"\n\ntempo total: "+ tempoLOO +" ms");
+					
+			}
+		});
+		frame.getContentPane().add(btnLeaveoneout);
 		
 		
 
