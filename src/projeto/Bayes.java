@@ -26,16 +26,16 @@ public class Bayes implements Serializable{
 	}
 	
 //cria uma rede de Bayes através de uma floresta, uma amostra e uma pseudo-contagem	
-//O(n(ds²+r) + n²ds)
+//O(nds)
 	public double[][][] tensorConstructor(Floresta floresta, Amostra amostra, double s) {
 		
 		double[][][] Tensor = new double[floresta.size()][][];
 		for (int i = 0; i < floresta.size(); i++) {
 			int daddy= floresta.getForest()[i];
 			if(floresta.isRoot(i)) {
-				Tensor[i]=matrixCondRoot(amostra,i, s); //O(r*n)*1
+				Tensor[i]=matrixCondRoot(amostra,i, s); //O(r*n)
 			}else {
-				Tensor[i]= matrixCond(amostra,i,daddy,s); //O(ds² + (d+ds)n)(n-1)
+				Tensor[i]= matrixCond(amostra,i,daddy,s); //O(ds)
 			}
 		}
 		return Tensor;
@@ -71,7 +71,7 @@ public class Bayes implements Serializable{
 		}
 	}
 	
-	public void writeBayes(String path) { // ii
+	public void writeBayes(String path) { 
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
 			oos.writeObject(this);
@@ -85,23 +85,20 @@ public class Bayes implements Serializable{
 	private double[][] matrixCondRoot(Amostra amostra,int root, double s) {
 		double[][] newMatrix= new double[1][amostra.domain()[root]];
 		for(int j=0; j<newMatrix[0].length;j++) {
-			int[] vars= {root};
-			int[] varsValue = {j};
-			int intersecao= amostra.count(vars, varsValue);
+//			int[] vars= {root};
+//			int[] varsValue = {j};
+			double intersecao;//= amostra.count(vars, varsValue);
+			intersecao = (double) amostra.getCountTensor()[0][root][amostra.domain()[0]][j];
 			newMatrix[0][j] = (intersecao+s)/(amostra.length()+s*amostra.domain()[root]);
-			}
-		return newMatrix;
+		}
+	return newMatrix;
 	}
 	
-	//O(d)
+	//O(d*s)
 	private double[][] matrixCond(Amostra amostra,int son, int daddy, double s) {
 		//System.out.println(daddy+" new daddy ");
 		double[][] newMatrix= new double[amostra.domain()[daddy]][amostra.domain()[son]];
 		for(int i=0;i<newMatrix.length;i++) {
-//			int[] vars= {daddy};
-//			int[] varsValue = {i};
-//			int daddyCount = amostra.count(vars, varsValue);
-			//System.out.println(daddy+" "+i);
 			int daddyCount;
 			if(daddy==0) {
 				daddyCount= amostra.getCountTensor()[daddy][1][i][amostra.domain()[1]];

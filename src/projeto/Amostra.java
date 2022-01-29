@@ -99,7 +99,7 @@ public class Amostra implements Serializable{
 	public ArrayList<int[]> getList() {
 			return list;
 		}
-	//O(m² +n*m²)=O(n*m²)
+	//O(n*m²)
 	public void build() {
 		countTensor= new int[dataDim()-1][dataDim()][][];
 		for (int i = 0; i < dataDim(); i++) {
@@ -207,6 +207,7 @@ public class Amostra implements Serializable{
 	return s;
 	}
 
+//Não usamos o count de todo, preferimos sempre usar o tensor pois evita que tenhamos que fazer counts desnecessários
 // retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
 // O(n*m), n= # elementos da amostra, m= # dataDim()
 	public int count(int[] v, int[] w) {
@@ -231,11 +232,6 @@ public class Amostra implements Serializable{
 		}else throw new RuntimeException("Count: given vectors don't have equal dimensions");
 	}
 
-// recebe duas variaveis e retorna a matriz cujas linhas sao os valores de uma variavel e as colunas os valores da outra, cada entrada ij
-// é a contagem de ocorrencias em que a variavel daddy é i e son é j. A matriz tem uma linha e coluna extras que são o total de ocorrências 
-// em que daddy é i (coluna) e son é j (linha)
-	
-
 	
 //retorna o numero de variaveis que os vetores de uma amostra têm
 // O(1)
@@ -246,7 +242,7 @@ public class Amostra implements Serializable{
 	}
 	
 //calcula a informaçao mutua entre duas variaveis, recebendo a matriz de contagens das interseçoes e total
-	//O(d*s*log n)
+	//O(d*s)
 	public double mutualInfo(int x, int y) {
 		int[][] matrix;
 		if(x<y) {
@@ -272,7 +268,8 @@ public class Amostra implements Serializable{
 		return soma;
 	}
 	
-// retorna as variáveis onde existe apenas um único valor ao longo de toda a amostra
+	// retorna as variáveis onde existe apenas um único valor ao longo de toda a amostra
+	//!!! deve dar para usar o tensor para tornar mais eficiente
 	// O(dataDim()*n)
 	public boolean[] Alone() {
 		Verify[] res = new Verify[dataDim()];

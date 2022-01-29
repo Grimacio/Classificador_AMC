@@ -75,7 +75,8 @@ public class Grafos implements Serializable{
 	}
 	
 //transforma um grafo numa árvore com o maior peso possível nas suas arestas
-//O(n+n³ + n²log(n))
+// deve dar para fazer melhor
+//O(n²(n+logn))
 	public Floresta max_spanning_tree() {
 		Floresta tree = new Floresta(dim);		//O(n) , n=nos				//floresta com os nos {0,...,dim} (sem arestas)
 		double[] adj = new double[dim];			//O(1)			//lista onde se atualiza o peso das arestas dos nos adjacentes
@@ -102,9 +103,9 @@ public class Grafos implements Serializable{
 			pivot = max_index;							//O(1)				//tornar o novo elemento da �rvore no novo pivot
 		}
 
-		if(tree.treeQ())
+		if(tree.treeQ()) {
 			return tree;
-		else throw new RuntimeException("nao é uma arvore");
+		}else throw new RuntimeException("nao é uma arvore");
 	}
 
 	//O(n)
@@ -121,13 +122,13 @@ public class Grafos implements Serializable{
 	}
 	
 //a partir de uma amostra adiciona no grafo todas as arestas possíveis
-//	O(n³)
+//	O(n²*d*s)
 	public void build(Amostra amostra) {
 		boolean[] alone = amostra.Alone();
-		for (int i = 0; i < alone.length; i++) {
+		for (int i = 0; i < alone.length; i++) { //O(n)
 			if (alone[i] == false) {
-				for (int j = i+1; j < alone.length; j++) {
-					add_edge(i, j, amostra.mutualInfo(i,j));
+				for (int j = i+1; j < alone.length; j++) {	 //O(n)
+					add_edge(i, j, amostra.mutualInfo(i,j)); //O(d*s)
 				}
 			} else {
 				for (int j = i+1; j < alone.length; j++) {
