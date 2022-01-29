@@ -115,6 +115,7 @@ public class app2 {
 //					}
 //					i=i+1;
 //				}
+				System.out.println(Arrays.toString(vector));
 				startTime = System.nanoTime();
 				double[] res= C.classify(vector);
 				endTime = System.nanoTime();

@@ -91,6 +91,10 @@ public class Amostra implements Serializable{
 		build();
 	}
 	
+	public void setCountTensor(int[][][][] countTensor) {
+		this.countTensor = countTensor;
+	}
+
 	public int[][][][] getCountTensor() {
 		return countTensor;
 	}
@@ -102,13 +106,13 @@ public class Amostra implements Serializable{
 	//O(n*m²)
 	public void build() {
 		countTensor= new int[dataDim()-1][dataDim()][][];
-		for (int i = 0; i < dataDim(); i++) {
+		for (int i = 0; i < dataDim()-1; i++) {
 			for (int j = i+1; j < dataDim(); j++) {
 				countTensor[i][j]= new int[domain()[i]+1][domain()[j]+1];
 			}
 		}
 		for (int k = 0; k < length(); k++) {
-			for (int i = 0; i < dataDim(); i++) {
+			for (int i = 0; i < dataDim()-1; i++) {
 				for (int j = i+1; j < dataDim(); j++) {
 					countTensor[i][j][list.get(k)[i]][list.get(k)[j]]+=1;
 					countTensor[i][j][list.get(k)[i]][domain()[j]]+=1;
@@ -294,7 +298,7 @@ public class Amostra implements Serializable{
 	
 	public static void main(String[] Args) {
 		
-		Amostra a= new Amostra("bcancer.csv");
+		Amostra a= new Amostra("letter.csv");
 		System.out.println(Arrays.deepToString(a.getCountTensor()));
 	}
 }

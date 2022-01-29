@@ -38,63 +38,76 @@ public class Classificador {
 		return R;
 	}
 	
+	public int run(int[] vector) {
+		graph();
+		bayes(0.5);	
+		return (int) classify(vector)[0];
+	}
+	
 	public double[] classify(int[] vector) {
+		int aux =vector[vector.length-1];
 		double max = 0;
 		int max_index = 0;
-		double[] prob = new double[R.dimClass()];
 		int i = 0;
 		while (i < (R.dimClass())) {
 			vector[vector.length-1]=i;
 			double max_aux = R.prob(vector, s);
-			prob[i] = max_aux;
 			if (max_aux > max) {
 				max=max_aux;
 				max_index=i;
 			}
 			i=i+1;
 		}
+		vector[vector.length-1]=aux;
 		double[]res = {max_index, max*100};
 		return res;
 	}
-	
-	public boolean leaveOneOut(int[] vector) {
-		Amostra am= new Amostra();
-		boolean found=false;
-		for(int[] element :A.getList()) {
-			if(found || element!=vector) {
-				am.add(element);
-			}else {
-				if(vector==element) {
-					found=true;
+	//bruh foi so trocar para o tensor e ja deu
+	public float leaveOneOut() {
+		float contador=0;
+		Amostra a= new Amostra();
+		int[][][][] backup = A.getCountTensor();
+		a.setCountTensor(backup);
+		a.setList(A);
+		for(int k=0; k<A.length(); k++) {
+			int[] nextEl= A.element(k);
+			for(int i=0; i<A.dataDim()-1; i++) {
+				for(int j=i+1; j<A.dataDim(); j++) {
+					a.getCountTensor()[i][j][nextEl[i]][nextEl[j]]-=1;
+					a.getCountTensor()[i][j][nextEl[i]][A.domain()[j]]-=1;
+					a.getCountTensor()[i][j][A.domain()[i]][nextEl[j]]-=1;
+				}
+			}
+			Classificador Cl = new Classificador(a,0.5);
+			if(Cl.run(nextEl)==nextEl[nextEl.length-1]) {
+				contador++;
+			}
+			
+			for(int i=0; i<A.dataDim()-1; i++) {
+				for(int j=i+1; j<A.dataDim(); j++) {
+					a.getCountTensor()[i][j][nextEl[i]][nextEl[j]]+=1;
+					a.getCountTensor()[i][j][nextEl[i]][A.domain()[j]]+=1;
+					a.getCountTensor()[i][j][A.domain()[i]][nextEl[j]]+=1;
 				}
 			}
 		}
-		Classificador Cl = new Classificador(am,0);
-		Cl.graph();
-		Cl.bayes(0.5);
-		int indiceReal= vector[(vector.length-1)];
-		int indiceGuess= (int) Cl.classify(vector)[0];
-		return indiceGuess == indiceReal;
-	}
-	
-	public double leaveOneOut() {
-		double counter=0;
-		for(int[] v : A.getList()) {
-			if(leaveOneOut(v)) {
-				counter++;
-			}
-		}
-		return (counter/A.length())*100;
+		System.out.println(contador);
+		return (contador/A.length())*100;
 	}
 	
 	
-//	public static void main(String[] args) {
-//		// TODO Auto-generated method stub
-//		Classificador C= new Classificador(new Amostra("diabetes.csv"));
-//		System.out.println(C.leaveOneOut());
-//		
-//		
-//	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Classificador C= new Classificador(new Amostra("diabetes.csv"), 0.5);
+		System.out.println(C.leaveOneOut());
+//		Classificador C= new Classificador(new Amostra("bcancer.csv"), 0.5);
+//		int[] teste= {0,0,0,0,0,0,0,0,0,0,0};
+//		C.graph();
+//		C.bayes(0.5);
+//		System.out.println("final "+(C.run(teste)==teste[teste.length-1]));
+//		System.out.println(teste[teste.length-1]);
+	
+	}
 }
 	
 
