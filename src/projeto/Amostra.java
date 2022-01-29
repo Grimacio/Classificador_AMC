@@ -255,13 +255,13 @@ public class Amostra implements Serializable{
 			matrix = countTensor[y][x];
 		}
 		double soma=0;
-		double dim= length();
+		double dim= (double) length();
 		for (int i = 0; i < matrix.length-1; i++) {
 			for (int j = 0; j < matrix[0].length-1; j++) {
 				if(j!=matrix[0].length-1 && i!= matrix.length-1) {
 					if (matrix[i][j]!=0) {
 						double first= (double) matrix[i][j];
-						double dimD= (double) dim;
+						double dimD= dim;
 						double second= (double) matrix[i][matrix[0].length-1];
 						double third = (double)matrix[matrix.length-1][j];
 						soma+= (first/dimD) * Math.log(dimD*(first/(second* third)));
