@@ -95,6 +95,6 @@ public class Floresta implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Floresta \n" + Arrays.toString(v) ;
+		return "Forest \n" + Arrays.toString(v) ;
 	}
 }
