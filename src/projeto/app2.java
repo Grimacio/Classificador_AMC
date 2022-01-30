@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
@@ -22,6 +23,7 @@ public class app2 {
 	long startTime=0;
 	long endTime=0;
 	long time;
+	String path;
 
 
 	/**
@@ -129,14 +131,31 @@ public class app2 {
 		});
 		
 		frame.getContentPane().add(btnNewButton_1);
-		
+		JFileChooser fileChooser1= new JFileChooser();
 		JButton btnLeaveoneout = new JButton("LeaveOneOut");
 		btnLeaveoneout.setBounds(362, 289, 149, 25);
 		btnLeaveoneout.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
+				ArrayList<String> ficheiros= new ArrayList<String>();
+				boolean done=false;
+				while(!done) {
+					String path_temp="";
+					int r = fileChooser1.showOpenDialog((Component)e.getSource());
+					if (r==fileChooser1.APPROVE_OPTION){
+						
+						path_temp=fileChooser1.getSelectedFile().getAbsolutePath();
+						
+					}
+					done=(path_temp=="");
+					if(!done) {
+						String s;
+						s=path_temp.substring(path_temp.lastIndexOf("/") + 1, path_temp.indexOf(".csv")).concat(".csv");
+						ficheiros.add(s);
+					}
+				}
 					String LOOres="";
-					String[] ficheiros= {"bcancer.csv","diabetes.csv","hepatitis.csv","iris.csv", "letter.csv", "satimage.csv", "soybean-large.csv", "thyroid.csv"};
+		
 					long startTime= System.nanoTime();
 					for(String ficheiro : ficheiros) {
 						Classificador ClTemp= new Classificador(new Amostra(ficheiro),0.5);

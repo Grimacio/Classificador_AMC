@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Color;
+import javax.swing.JCheckBox;
 
 public class app implements Serializable{
 	private static final long serialVersionUID=1L;
@@ -78,7 +79,7 @@ public class app implements Serializable{
 		textArea = new JTextArea();
 		textArea.setFont(new Font("Dialog", Font.PLAIN, 15));
 		textArea.setBackground(new Color(230, 230, 250));
-		textArea.setBounds(233, 26, 409, 302);
+		textArea.setBounds(38, 0, 409, 302);
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
 		frame.getContentPane().add(textArea);
@@ -86,6 +87,10 @@ public class app implements Serializable{
 		frame.setBackground(new Color(255, 255, 255));
 		frame.setBounds(100, 100, 871, 611);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JCheckBox chckbxShow = new JCheckBox("Show");
+		chckbxShow.setSelected(false);
+		chckbxShow.setBounds(135, 395, 72, 23);
+		frame.getContentPane().add(chckbxShow);
 		
 		JFileChooser fileChooser = new JFileChooser();
 		
@@ -155,8 +160,10 @@ public class app implements Serializable{
 					ChooseSample.setEnabled(false);
 					CreateBayes.setEnabled(true);
 					textArea.setText("["+((endTime-startTime)/1000000)+"ms]");
-					String text=C.A.toString().replace("],", "], \n ")+"\n["+((endTime-startTime)/1000000)+"ms]";
-					textArea.setText(text);
+					if(chckbxShow.isSelected()) {
+						String text=C.A.toString().replace("],", "], \n ")+"\n["+((endTime-startTime)/1000000)+"ms]";
+						textArea.setText(text);
+					}
 					amostraTime= (endTime-startTime)/1000000;
 					
 						
@@ -229,5 +236,7 @@ public class app implements Serializable{
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblNewLabel_2.setBounds(233, 355, 425, 13);
 		frame.getContentPane().add(lblNewLabel_2);
+		
+		
 	}
 }
