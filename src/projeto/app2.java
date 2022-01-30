@@ -158,10 +158,13 @@ public class app2 {
 		
 					long startTime= System.nanoTime();
 					for(String ficheiro : ficheiros) {
+						long startTime2= System.nanoTime();
 						Classificador ClTemp= new Classificador(new Amostra(ficheiro),0.5);
 						ClTemp.graph();
 						ClTemp.bayes(0.5);
-						LOOres=LOOres+ "\n"+ ficheiro.replace(".csv", "").replace("large","l")+ " \t Precisao:"+ClTemp.leaveOneOut()+"%";
+						float res=ClTemp.leaveOneOut();
+						long endTime2= System.nanoTime();
+						LOOres=LOOres+ "\n"+ ficheiro.replace(".csv", "").replace("large","l")+ " \t Precisao:"+res+"% \t ("+((endTime2-startTime2)/1000000)+"ms)";
 						
 					}
 					long endTime= System.nanoTime();
