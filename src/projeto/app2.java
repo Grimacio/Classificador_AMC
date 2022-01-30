@@ -1,41 +1,57 @@
 package projeto;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
+import java.io.Serializable;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.ImageIcon;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.Color;
+import javax.swing.JTextField;
 
-public class app2 {
+public class app2 implements Serializable{
+	private static final long serialVersionUID=1L;
 
-	private JFrame frame;
-	Classificador C= new Classificador();
+	private JFrame frmClassifier;
 	private JTextArea textArea;
+	Classificador C= new Classificador();
+	String path;
+	long classifyTime=0, bayesTime=0;
 	long startTime=0;
 	long endTime=0;
-	long time;
-	String path;
-
-
+	double s=0;
+	boolean show = false;
+	boolean classify = false;
+	boolean bayes = false;
+	String text;
+	String url = Paths.get("").toAbsolutePath().toString();
+	
+	
 	/**
-	 * Launch the application.
+	 * Launch the app2lication.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					app2 window = new app2();
-					window.frame.setVisible(true);
+					window.frmClassifier.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -44,7 +60,7 @@ public class app2 {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the app2lication.
 	 */
 	public app2() {
 		initialize();
@@ -53,93 +69,202 @@ public class app2 {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setForeground(new Color(0, 128, 128));
-		frame.setBounds(100, 100, 597, 358);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+	
+	private void initialize() {	
+		frmClassifier = new JFrame();
+		frmClassifier.setResizable(false);
+		frmClassifier.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));
+		frmClassifier.setTitle("Classifier");
+		frmClassifier.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"\\Picture1.png"));
+		frmClassifier.getContentPane().setBackground(new Color(230, 230, 250));
+		frmClassifier.getContentPane().setLayout(null);
 		textArea = new JTextArea();
-		textArea.setBounds(10, 85, 369, 185);
+		textArea.setEditable(false);
+		textArea.setFont(new Font("Dialog", Font.PLAIN, 15));
+		textArea.setBackground(new Color(240, 255, 255));
+		textArea.setBounds(233, 26, 409, 302);
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
-		frame.getContentPane().add(textArea);
+		frmClassifier.getContentPane().add(textArea);
 		textArea.setColumns(10);
 		
-		JScrollPane scroll = new JScrollPane(textArea,
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroll.setBounds(31, 67, 480, 215);
-		//scroll.setSize( 100, 100 );
-		frame.getContentPane().add(scroll);
-		frame.setVisible (true);
-		
-		JFileChooser fileChooserUSED = new JFileChooser();
-		fileChooserUSED.setAcceptAllFileFilterUsed(false);
-		fileChooserUSED.addChoosableFileFilter(new FileNameExtensionFilter("text File (.txt)","txt"));
-		
-		JButton btnNewButton = new JButton("Choose Bayes");
-		btnNewButton.setBounds(63, 26, 99, 31);
-		btnNewButton.addActionListener(new ActionListener() {
-			@SuppressWarnings("static-access")
-			public void actionPerformed(ActionEvent e) {
-					int r = fileChooserUSED.showOpenDialog((Component)e.getSource());
-					if (r==fileChooserUSED.APPROVE_OPTION) {
-						C.R.readBayes(fileChooserUSED.getSelectedFile().getAbsolutePath());
-						textArea.setText(Arrays.deepToString(C.R.getTensor()).replace("],", "], \n "));
-					}
+		@SuppressWarnings("serial")
+		JTextField textArea_Class = new JTextField() {
+			@Override public void setBorder(Border border) {
 			}
-		});
+		};
 		
-		frame.getContentPane().setLayout(null);
-		frame.getContentPane().add(btnNewButton);
+		JTextArea textArea_1 = new JTextArea();
+		textArea_1.setBackground(new Color(240, 248, 255));
+		textArea_1.setEditable(false);
+		textArea_1.setFont(new Font("Dialog", Font.PLAIN, 12));
+		textArea_1.setBounds(50, 314, 145, 16);
 		
-		JButton btnNewButton_1 = new JButton("Classify");
-		btnNewButton_1.setBounds(198, 26, 90, 31);
-		btnNewButton_1.addActionListener(new ActionListener() {
+		frmClassifier.setBackground(new Color(255, 255, 255));
+		frmClassifier.setBounds(100, 100, 220, 376);
+		frmClassifier.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JButton Classify = new JButton("Classify\r\n");
+		Classify.setBounds(10, 238, 187, 45);
+		Classify.setFont(new Font("Dialog", Font.PLAIN, 12));
+		Classify.setEnabled(false);
+		Classify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int [] vector = new int[C.R.getTree().size()];
 				for (int i = 0; i < vector.length-1; i++) {
-					String variable = JOptionPane.showInputDialog(frame, "Choose your "+(i+1)+" variable");
+					String variable = JOptionPane.showInputDialog(frmClassifier, "Choose your "+(i+1)+" variable");
 					int var = Integer.parseInt(variable);
 					vector[i] = var;
 				}
-				
-//				double max = 0;
-//				int max_index = 0;
-//				double[] prob = new double[R.dimClass()];
-//				int i = 0;
-//				//O(r*n)
-//				while (i < (R.dimClass())) {
-//					vector[vector.length-1]=i;
-//					System.out.println("---"+R.prob(vector));
-//					double max_aux = R.prob(vector);
-//					prob[i] = max_aux;
-//					if (max_aux > max) {
-//						max=max_aux;
-//						max_index=i;
-//					}
-//					i=i+1;
-//				}
 				System.out.println(Arrays.toString(vector));
 				startTime = System.nanoTime();
 				double[] res= C.classify(vector);
 				endTime = System.nanoTime();
 				int indice = (int) res[0];
-				String resultado="Resultado= "+indice+" com probabilidade "+ res[1]+"%";
 				endTime = System.nanoTime();
-				time= (endTime-startTime);
-				textArea.setText(resultado + "\n------> "+ time + " nanossegundos");
+				classifyTime = ((endTime-startTime)/1000000);
+				classify = true;
+				textArea_Class.setText(""+indice);
+				textArea_1.setText((bayesTime+classifyTime)+" ms");
+				textArea.setText("Result = "+indice+" with probability of "+ res[1]+"%");
+			}
+		});
+		
+		
+		JFileChooser fileChooserUSED = new JFileChooser();
+		fileChooserUSED.setAcceptAllFileFilterUsed(false);
+		fileChooserUSED.addChoosableFileFilter(new FileNameExtensionFilter("text File (.txt)","txt"));
+		
+		JButton ChooseBayes = new JButton("Choose Bayes Arborean Tree");
+		ChooseBayes.setBounds(10, 190, 187, 45);
+		ChooseBayes.setFont(new Font("Dialog", Font.PLAIN, 12));
+		ChooseBayes.addActionListener(new ActionListener() {
+			@SuppressWarnings("static-access")
+			public void actionPerformed(ActionEvent e) {
+					int r = fileChooserUSED.showOpenDialog((Component)e.getSource());
+					if (r==fileChooserUSED.APPROVE_OPTION) {
+						startTime=System.nanoTime();
+						C.R.readBayes(fileChooserUSED.getSelectedFile().getAbsolutePath());
+						endTime=System.nanoTime();
+						ChooseBayes.setText("Bayes Chosen");
+						bayesTime= (endTime-startTime)/1000000;
+						textArea_1.setText(bayesTime+" ms");
+						bayes = true;
+						ChooseBayes.setEnabled(false);
+						Classify.setEnabled(true);
+						if (show) {
+							textArea.setText(Arrays.deepToString(C.R.getTensor()).replace("],", "], \n "));
+						}
+				}
+		}
+	});
+		
+		JButton btnReset = new JButton("Reset");
+		btnReset.setBounds(114, 289, 83, 16);
+		btnReset.setFont(new Font("Dialog", Font.PLAIN, 12));
+		btnReset.addActionListener(new ActionListener() {
+			@SuppressWarnings("static-access")
+			public void actionPerformed(ActionEvent e) {
+				
+					C=new Classificador();
+					ChooseBayes.setEnabled(true);
+					ChooseBayes.setText("Choose Bayes");
+					Classify.setEnabled(false);
+					textArea.setText("");	
+					bayes = false;
+					classify = false;
+					text = "";
+					textArea_1.setText(0+" ms");
 				
 			}
 		});
 		
-		frame.getContentPane().add(btnNewButton_1);
+		frmClassifier.getContentPane().add(Classify);
+		
+		frmClassifier.getContentPane().add(ChooseBayes);
+		
+		JScrollPane scroll = new JScrollPane(textArea,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scroll.setBounds(224, 16, 381, 249);
+		//scroll.setSize( 100, 100 );
+		frmClassifier.getContentPane().add(scroll);
+		frmClassifier.setVisible (true);
+		
+		JPanel menu = new JPanel();
+		menu.setBackground(new Color(240, 248, 255));
+		menu.setBounds(0, 0, 207, 342);
+		frmClassifier.getContentPane().add(menu);
+		menu.setLayout(null);
+		
+		JLabel Classifier = new JLabel("");
+		Classifier.setIcon(new ImageIcon(url+"\\lupa.png"));
+		
+		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
+		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
+		Classifier.setBounds(40, 0, 120, 174);
+		menu.add(Classifier);
+		
+		menu.add(btnReset);
+		
+		JButton Show = new JButton("Show");
+		Show.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (show) {
+					frmClassifier.setBounds(100, 100, 220, 376);
+					show = false;
+					Show.setText("Show");
+				} else {
+					frmClassifier.setBounds(100, 100, 638, 376);
+					show = true;
+					Show.setText("Hide");
+					if(bayes && !classify) {
+						textArea.setText(Arrays.deepToString(C.R.getTensor()).replace("],", "], \n "));
+					}
+				}
+			}
+		});
+		
+		Show.setFont(new Font("Dialog", Font.PLAIN, 12));
+		Show.setBounds(10, 169, 83, 16);
+		menu.add(Show);
+		
+		menu.add(textArea_1);
+		
+		JLabel lblNewLabel_3_1 = new JLabel("Timer:\r\n");
+		lblNewLabel_3_1.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblNewLabel_3_1.setBounds(10, 315, 45, 13);
+		menu.add(lblNewLabel_3_1);
+		
+		textArea_Class.setFont(new Font("Dialog", Font.BOLD, 40));
+		textArea_Class.setEditable(false);
+		textArea_Class.setHorizontalAlignment(SwingConstants.CENTER);
+		textArea_Class.setBackground(new Color(240, 248, 255));
+		textArea_Class.setBounds(70, 54, 51, 43);
+		menu.add(textArea_Class);
+		
+		JLabel lblNewLabel = new JLabel("Developers: Beatriz Vidal, Dinis Pereira, Guilherme Gaspar & Margarida Cordeiro\r\n");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel.setBounds(217, 304, 425, 13);
+		frmClassifier.getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_1.setIcon(new ImageIcon(url+"\\Webp.net-resizeimage_1.png"));
+		lblNewLabel_1.setBounds(565, 294, 45, 45);
+		frmClassifier.getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Algorithms and Computer Modeling at Técnico");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblNewLabel_2.setBounds(217, 316, 425, 13);
+		frmClassifier.getContentPane().add(lblNewLabel_2);
+		
+		JButton btnAccuracy = new JButton("Accuracy");
 		JFileChooser fileChooser1= new JFileChooser();
 		fileChooser1.setAcceptAllFileFilterUsed(false);
 		fileChooser1.addChoosableFileFilter(new FileNameExtensionFilter("Comma Separated Values (.csv)","csv"));
-		JButton btnLeaveoneout = new JButton("LeaveOneOut");
-		btnLeaveoneout.setBounds(362, 289, 149, 25);
-		btnLeaveoneout.addActionListener(new ActionListener() {
+		btnAccuracy.setFont(new Font("Dialog", Font.PLAIN, 12));
+		btnAccuracy.setBounds(516, 269, 94, 25);
+		btnAccuracy.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<String> ficheiros= new ArrayList<String>();
@@ -164,7 +289,6 @@ public class app2 {
 						ficheiros.add(s);
 					}
 				}
-				if(!ficheiros.isEmpty()) {
 					String LOOres="";
 		
 		
@@ -183,18 +307,14 @@ public class app2 {
 						}
 						tempoLOO+=((endTime2-startTime2)/1000000);
 						domainNumber= domainNumber+soma/ClTemp.A.dataDim();
-						LOOres=LOOres+ "\n"+ ficheiro.replace(".csv", "").replace("large","l")+ " \t Precisao:"+res+"% \t ("+((endTime2-startTime2)/1000000)+"ms)";
+						LOOres=LOOres+ "\n"+ ficheiro.replace(".csv", "").replace("large","l")+ " \t Accuracy:"+res+"% \t ("+((endTime2-startTime2)/1000000)+"ms)";
 						
 					}
-	
+					textArea_1.setText(tempoLOO +" ms");
+					textArea.setText(LOOres+"\n\n"+ dataNumber + " analyzed vectors \nAverage of "+(dimNumber/ficheiros.size())+" variables per datum set \nAverage of " +(domainNumber/ficheiros.size())+" values per variable");
 					
-					textArea.setText(LOOres+"\n\ntempo total: "+ tempoLOO +" ms \n\n"+ dataNumber + " vetores analisados \nMedia de "+(dimNumber/ficheiros.size())+" variaveis por dataSet \nMedia de " +(domainNumber/ficheiros.size())+" valores por variavel");
-				}
 			}
 		});
-		frame.getContentPane().add(btnLeaveoneout);
-		
-		
-
+		frmClassifier.getContentPane().add(btnAccuracy);
 	}
 }
