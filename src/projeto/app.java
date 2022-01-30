@@ -10,6 +10,7 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+import java.nio.file.Paths;
 import java.awt.event.ActionEvent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -34,6 +35,7 @@ public class app implements Serializable{
 	boolean show = false;
 	boolean sample = false;
 	boolean bayes = false;
+	String url;
 	String text;
 	
 	
@@ -65,11 +67,12 @@ public class app implements Serializable{
 	 */
 	
 	private void initialize() {	
+		url=Paths.get("").toAbsolutePath().toString();
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));
 		frame.setTitle("Convertor: Sample to Bayes Arborean Tree");
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("/home/gui_gaspar/eclipse-workspace/ClassificadorAMC/Webp.net-resizeimage_1.png"));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"/Webp.net-resizeimage_1.png"));
 		frame.getContentPane().setBackground(new Color(230, 230, 250));
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
@@ -224,7 +227,7 @@ public class app implements Serializable{
 		menu.setLayout(null);
 		
 		JLabel Classifier = new JLabel("");
-		Classifier.setIcon(new ImageIcon("/home/gui_gaspar/eclipse-workspace/ClassificadorAMC/tree_1.png"));
+		Classifier.setIcon(new ImageIcon(url+"/tree_1.png"));
 		
 		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
@@ -274,7 +277,7 @@ public class app implements Serializable{
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setIcon(new ImageIcon("/home/gui_gaspar/eclipse-workspace/ClassificadorAMC/Webp.net-resizeimage_1.png"));
+		lblNewLabel_1.setIcon(new ImageIcon(url+ "/Webp.net-resizeimage_1.png"));
 		lblNewLabel_1.setBounds(565, 355, 45, 45);
 		frame.getContentPane().add(lblNewLabel_1);
 		
