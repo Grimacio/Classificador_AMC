@@ -100,7 +100,7 @@ public class app implements Serializable{
 		
 		JFileChooser fileChooser2 = new JFileChooser();
 		
-		JButton Export = new JButton("Export Data");
+		JButton Export = new JButton("Export Data (.txt)");
 		Export.setBounds(10, 300, 187, 45);
 		Export.setFont(new Font("Dialog", Font.PLAIN, 12));
 		Export.setEnabled(false);
@@ -198,6 +198,7 @@ public class app implements Serializable{
 					CreateBayes.setEnabled(false);
 					CreateBayes.setText("Create Bayes Arborean Tree");
 					Export.setEnabled(false);
+					Export.setText("Export Data (.txt)");
 					textArea.setText("");	
 					CreateBayes.setText("Create Bayes Arborean Tree");
 					sample = false;
