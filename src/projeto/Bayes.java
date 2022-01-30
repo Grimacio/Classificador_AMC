@@ -49,7 +49,9 @@ public class Bayes implements Serializable{
 		double[][] newMatrix= new double[1][amostra.domain(root)];
 		for(int j=0; j<newMatrix[0].length;j=j+1) {
 			double intersecao;
-			intersecao = (double) amostra.getCountTensor()[0][root][amostra.domain(0)][j];
+			int[] countVars= {root};
+			int[] countVal= {j};
+			intersecao = (double) amostra.count(countVars, countVal);
 			newMatrix[0][j] = (intersecao+s)/(amostra.length()+s*amostra.domain(root));
 		}
 	return newMatrix;
@@ -60,11 +62,9 @@ public class Bayes implements Serializable{
 		double[][] newMatrix= new double[amostra.domain(daddy)][amostra.domain(son)];
 		for(int i=0;i<newMatrix.length;i=i+1) {
 			int daddyCount;
-			if(daddy==0) {
-				daddyCount= amostra.getCountTensor()[daddy][1][i][amostra.domain(1)];
-			}else {
-				daddyCount = amostra.getCountTensor()[0][daddy][amostra.domain(0)][i];
-			}
+			int[] countVars= {daddy};
+			int[] countVal= {i};
+			daddyCount=amostra.count(countVars, countVal);
 			for(int j=0; j<newMatrix[0].length;j=j+1) {
 				newMatrix[i][j]=DFO(amostra, son, daddy, j , i, daddyCount, s);
 			}
@@ -74,11 +74,9 @@ public class Bayes implements Serializable{
 //O(1)
 	private double DFO(Amostra amostra, int son, int daddy, int sonValue, int daddyValue, int daddyCount, double s){
 		double intersecao;
-		if(son<daddy) {
-			intersecao= (double) amostra.getCountTensor()[son][daddy][sonValue][daddyValue];
-		}else {
-			intersecao= (double) amostra.getCountTensor()[daddy][son][daddyValue][sonValue];
-		}
+		int[] countVars= {daddy,son};
+		int[] countVal= {daddyValue, sonValue};
+		intersecao= amostra.count(countVars, countVal);
 		return (intersecao+s)/(daddyCount+s*amostra.domain(son));
 	}
 	

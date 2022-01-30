@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 
 public class Amostra implements Serializable{
@@ -22,11 +23,11 @@ public class Amostra implements Serializable{
 //adiciona um vetor a amostra se tiver as dimensoes certas
 	//O(1)
 	public void add (int[] v){
-		if(list.isEmpty() && v.length!=0) {
+		if(list.isEmpty() && v.length!=0) {				//Se a lista for vazia, adicionar 
 			list.add(v);
 		} else {
-			if(v.length == list.get(0).length) {
-				list.add(v);
+			if(v.length == list.get(0).length) {		//Se a lista já contiver um elemento, apenas adicionar se o 
+				list.add(v);							//novo elemento tiver as mesmas dimensões do primeiro elemento
 			} else throw new RuntimeException("Cannot add element for wrong dimensions");
 		}	
 	}
@@ -34,14 +35,14 @@ public class Amostra implements Serializable{
 //retorna numero de vetores da amostra
 // O(1)
 	public int length() {
-		return list.size();
+		return list.size();								
 	}
 
 // retorna o vetor com indice i da amostra
 // O(1)
 	public int[] element(int i) {
 		if(i>=0 && i<length()) {
-		return list.get(i);
+			return list.get(i);
 		} else throw new RuntimeException("Cannot calculate element for index out of bounds");
 	}
 
@@ -54,51 +55,70 @@ public class Amostra implements Serializable{
 		} return domain[i];
 	}
 
-//O(n*m) da primeira vez que corre, depois Ã© O(1)
+//O(n*m)
 	private void domain() {
 		int[] res= new int[dataDim()];
-		for (int i = 0; i < res.length; i++) {
+		for (int i = 0; i < res.length; i++) {			//cria um vetor vazio com dimensao = #variaveis
 			res[i]=0;
 		}
 		for (int i = 0; i < length(); i++) {
-			for (int j = 0; j < dataDim(); j++) {
+			for (int j = 0; j < dataDim(); j++) {		//acrescenta para cada entrada o valor máximo que essa variável assume
 				if(list.get(i)[j]> res[j]) {
 					res[j]=list.get(i)[j]; 
 				}
 			}
 		}
 		for (int i = 0; i < res.length; i++) {
-			res[i]=res[i]+1;
+			res[i]=res[i]+1;							//acrescenta 1 a cada valor para contarmos com o valor 0
 		}
 		this.domain=res;
 	}	
 	
+	
+	
 //nao usamos o count de todo, preferimos sempre usar o tensor pois evita que tenhamos que fazer counts desnecessarios
 // retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
 // O(n*m), n= # elementos da amostra, m= # dataDim()
+	
 	public int count(int[] v, int[] w) {
 		if(v.length==w.length) {
-			if(v.length==2) {
-				return countTensor[v[0]][v[1]][w[0]][w[1]];
-			} else {
-				int contador=0;	
-				int i=0;
-				while(i<length()) {
-					boolean nice=true;
-					int j=0;
-					while(j<v.length && nice) {
-						if(list.get(i)[v[j]]!= w[j]) {
-							nice=false;
-						}
-						j++;
-					}
-					if(nice) {
-						contador++;
-					}
-					i++;
+			for (int i=0; i<v.length;i=i+1) {			//se algum dos valores estiver fora do dominio da sua variavel, return 0
+				if(w[i]>=domain[v[i]]) {
+					return 0;
 				}
-				return contador;
 			}
+			if(v.length==1) {
+				if(v[0]!=dataDim()-1) {
+					return countTensor[v[0]][dataDim()-1][w[0]][domain[dataDim()-1]];
+				}else {
+					return countTensor[0][v[0]][domain[0]][w[0]];									//no caso de ser um count trivial de 1 ou 2 variáveis
+				}
+			}																						//podemos fazer uso do countTensor 
+			if(v.length==2) {
+				if(v[0]<v[1]) {
+					return countTensor[v[0]][v[1]][w[0]][w[1]];	
+				}else {
+					return countTensor[v[1]][v[0]][w[1]][w[0]];							//temos que nos certificar que estamos a procurar na diagonal superior
+				}
+			} 													
+			int contador=0;	
+			int i=0;
+			while(i<length()) {
+				boolean nice=true;									//se forem mais que duas variáveis temos que percorrer
+				int j=0;											//a amostra e contar normalmente
+				while(j<v.length && nice) {
+					if(list.get(i)[v[j]]!= w[j]) {
+						nice=false;
+					}
+					j++;
+				}
+				if(nice) {
+					contador++;
+				}
+				i++;
+			}
+			return contador;
+		
 		} else throw new RuntimeException("Count: given vectors don't have equal dimensions");
 	}
 	
@@ -282,6 +302,14 @@ public class Amostra implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void main(String[] Args) {
+		Amostra a= new Amostra("bcancer.csv");
+		int[] v= {10,0};
+		int[] w= {0,0};
+		System.out.println(a.count(v, w));
+		System.out.println(Arrays.deepToString(a.getCountTensor()));
 	}
 	
 }
