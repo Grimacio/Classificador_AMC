@@ -150,7 +150,8 @@ public class app2 {
 					done=(path_temp=="");
 					if(!done) {
 						String s;
-						s=path_temp.substring(path_temp.lastIndexOf("/") + 1, path_temp.indexOf(".csv")).concat(".csv");
+						s=path_temp.replace("\\","/");
+						s=s.substring(s.lastIndexOf("/") + 1, s.indexOf(".csv")).concat(".csv");
 						ficheiros.add(s);
 					}
 				}
