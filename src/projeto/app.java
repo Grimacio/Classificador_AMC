@@ -37,6 +37,7 @@ public class app implements Serializable{
 	boolean bayes = false;
 	String text;
 	String url = Paths.get("").toAbsolutePath().toString();
+	boolean windows=false;
 	
 	
 	/**
@@ -67,11 +68,18 @@ public class app implements Serializable{
 	 */
 	
 	private void initialize() {	
+		if(url.contains("\\")) {
+			windows=true;
+		}
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));
 		frame.setTitle("Convertor: Sample to Bayes Arborean Tree");
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"/Picture1.png"));
+		if(!windows) {
+			frame.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"/Picture1.png"));
+		}else {
+			frame.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"\\Picture1.png"));
+		}
 		frame.getContentPane().setBackground(new Color(230, 230, 250));
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
@@ -230,7 +238,11 @@ public class app implements Serializable{
 		menu.setLayout(null);
 		
 		JLabel Classifier = new JLabel("");
-		Classifier.setIcon(new ImageIcon(url+"/tree_1.png"));
+		if(!windows) {
+			Classifier.setIcon(new ImageIcon(url+"/tree_1.png"));
+		}else {
+			Classifier.setIcon(new ImageIcon(url+"\\tree_1.png"));
+		}
 		
 		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
@@ -280,7 +292,11 @@ public class app implements Serializable{
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setIcon(new ImageIcon(url+"/Webp.net-resizeimage_1.png"));
+		if(!windows) {
+			lblNewLabel_1.setIcon(new ImageIcon(url+"/Webp.net-resizeimage_1.png"));
+		}else {
+			lblNewLabel_1.setIcon(new ImageIcon(url+"\\Webp.net-resizeimage_1.png"));
+		}
 		lblNewLabel_1.setBounds(565, 355, 45, 45);
 		frame.getContentPane().add(lblNewLabel_1);
 		
