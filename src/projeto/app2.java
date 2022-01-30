@@ -39,6 +39,7 @@ public class app2 implements Serializable{
 	boolean show = false;
 	boolean classify = false;
 	boolean bayes = false;
+	boolean windows= false;
 	String text;
 	String url = Paths.get("").toAbsolutePath().toString();
 	
@@ -71,11 +72,18 @@ public class app2 implements Serializable{
 	 */
 	
 	private void initialize() {	
+		if(url.contains("\\")) {
+			windows=true;
+		}
 		frmClassifier = new JFrame();
 		frmClassifier.setResizable(false);
 		frmClassifier.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));
 		frmClassifier.setTitle("Classifier");
-		frmClassifier.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"/Picture1.png"));
+		if(!windows) {
+			frmClassifier.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"/Picture1.png"));
+		}else {
+			frmClassifier.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"\\Picture1.png"));
+		}
 		frmClassifier.getContentPane().setBackground(new Color(230, 230, 250));
 		frmClassifier.getContentPane().setLayout(null);
 		textArea = new JTextArea();
@@ -197,6 +205,11 @@ public class app2 implements Serializable{
 		
 		JLabel Classifier = new JLabel("");
 		Classifier.setIcon(new ImageIcon(url+"/lupa.png"));
+		if(!windows) {
+			Classifier.setIcon(new ImageIcon(url+"/lupa.png"));
+		}else {
+			Classifier.setIcon(new ImageIcon(url+"\\lupa.png"));
+		}
 		
 		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
@@ -249,6 +262,11 @@ public class app2 implements Serializable{
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_1.setIcon(new ImageIcon(url+"/Webp.net-resizeimage_1.png"));
+		if(!windows) {
+			lblNewLabel_1.setIcon(new ImageIcon(url+"/Webp.net-resizeimage_1.png"));
+		}else {
+			lblNewLabel_1.setIcon(new ImageIcon(url+"\\Webp.net-resizeimage_1.png"));
+		}
 		lblNewLabel_1.setBounds(565, 294, 45, 45);
 		frmClassifier.getContentPane().add(lblNewLabel_1);
 		
