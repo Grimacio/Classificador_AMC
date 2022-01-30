@@ -139,6 +139,10 @@ public class app2 {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<String> ficheiros= new ArrayList<String>();
 				boolean done=false;
+				int dataNumber=0;
+				int dimNumber=0;
+				int domainNumber=0;
+				double tempoLOO=0;
 				while(!done) {
 					String path_temp="";
 					int r = fileChooser1.showOpenDialog((Component)e.getSource());
@@ -157,7 +161,7 @@ public class app2 {
 				}
 					String LOOres="";
 		
-					long startTime= System.nanoTime();
+		
 					for(String ficheiro : ficheiros) {
 						long startTime2= System.nanoTime();
 						Classificador ClTemp= new Classificador(new Amostra(ficheiro),0.5);
@@ -165,12 +169,20 @@ public class app2 {
 						ClTemp.bayes(0.5);
 						float res=ClTemp.leaveOneOut();
 						long endTime2= System.nanoTime();
+						dataNumber=dataNumber+ClTemp.A.length();
+						dimNumber= dimNumber + ClTemp.A.dataDim();
+						int soma=0;
+						for(int i=0;i<ClTemp.A.dataDim(); i=i+1) {
+							soma=soma+ClTemp.A.domain(i);
+						}
+						tempoLOO+=((endTime2-startTime2)/1000000);
+						domainNumber= domainNumber+soma/ClTemp.A.dataDim();
 						LOOres=LOOres+ "\n"+ ficheiro.replace(".csv", "").replace("large","l")+ " \t Precisao:"+res+"% \t ("+((endTime2-startTime2)/1000000)+"ms)";
 						
 					}
-					long endTime= System.nanoTime();
-					double tempoLOO=((endTime-startTime)/1000000);
-					textArea.setText(LOOres+"\n\ntempo total: "+ tempoLOO +" ms");
+	
+					
+					textArea.setText(LOOres+"\n\ntempo total: "+ tempoLOO +" ms \n\n"+ dataNumber + " vetores analisados \nMedia de "+(dimNumber/ficheiros.size())+" variaveis por dataSet \nMedia de " +(domainNumber/ficheiros.size())+" valores por variavel");
 					
 			}
 		});
