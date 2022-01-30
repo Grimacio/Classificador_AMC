@@ -39,7 +39,7 @@ public class Grafos implements Serializable{
 	}	
 	
 //transforma um grafo numa arvore com o maior peso possível nas suas arestas
-// deve dar para fazer melhor
+//deve dar para fazer melhor
 //O(n²(n+logn))	
 	public Floresta max_spanning_tree() {
 		Floresta tree = new Floresta(dim);		//O(n) , n=nos				//floresta com os nos {0,...,dim} (sem arestas)
@@ -89,7 +89,7 @@ public class Grafos implements Serializable{
 	
 // FUNCOES EXTRA	
 	
-//a partir de uma amostra adiciona no grafo todas as arestas possíveis
+//a partir de uma amostra adiciona no grafo todas as arestas possíveis com peso= mutualInfo entre dois nos
 //	O(n²*d*s)
 	public void build(Amostra amostra) {
 		boolean[] alone = amostra.Alone();

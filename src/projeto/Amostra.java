@@ -75,9 +75,9 @@ public class Amostra implements Serializable{
 	
 	
 	
-//nao usamos o count de todo, preferimos sempre usar o tensor pois evita que tenhamos que fazer counts desnecessarios
+
 // retorna o numero de vezes que cada elemento de indice i do vetor v tem o valor de indice i em w
-// O(n*m), n= # elementos da amostra, m= # dataDim()
+//O(1) para 2 ou menos variáveis, O(n*dataDim()) para mais variáveis
 	
 	public int count(int[] v, int[] w) {
 		if(v.length==w.length) {
@@ -93,18 +93,18 @@ public class Amostra implements Serializable{
 					return countTensor[0][v[0]][domain[0]][w[0]];									//no caso de ser um count trivial de 1 ou 2 variáveis
 				}
 			}																						//podemos fazer uso do countTensor 
-			if(v.length==2) {
+			if(v.length==2) {																		//O(1)
 				if(v[0]<v[1]) {
 					return countTensor[v[0]][v[1]][w[0]][w[1]];	
 				}else {
 					return countTensor[v[1]][v[0]][w[1]][w[0]];							//temos que nos certificar que estamos a procurar na diagonal superior
-				}
+				}																		
 			} 													
 			int contador=0;	
 			int i=0;
 			while(i<length()) {
 				boolean nice=true;									//se forem mais que duas variáveis temos que percorrer
-				int j=0;											//a amostra e contar normalmente
+				int j=0;											//a amostra e contar normalmente com complexidade maior
 				while(j<v.length && nice) {
 					if(list.get(i)[v[j]]!= w[j]) {
 						nice=false;
@@ -177,7 +177,7 @@ public class Amostra implements Serializable{
 		}else throw new RuntimeException("Cannot calculate data dimension for not existent sample");
 	}
 	
-//calcula a informaÃ§ao mutua entre duas variaveis, recebendo a matriz de contagens das interseÃ§oes e total
+//calcula a informacao mutua entre duas variaveis, usando a matriz de contagens das intersecoes vindas do countTensor e os valores totais
 //O(d*s)
 	public double mutualInfo(int x, int y) {
 		int[][] matrix;
@@ -188,14 +188,14 @@ public class Amostra implements Serializable{
 		}
 		double soma=0;
 		double dim= (double) length();
-		for (int i = 0; i < matrix.length-1; i++) {
-			for (int j = 0; j < matrix[0].length-1; j++) {
-				if(j!=matrix[0].length-1 && i!= matrix.length-1) {
-					if (matrix[i][j]!=0) {
-						double first= (double) matrix[i][j];
+		for (int i = 0; i < matrix.length-1; i++) {										//vamos andar pelos valores da variável menor (linhas)
+			for (int j = 0; j < matrix[0].length-1; j++) {								//vamos andar pelos valores da variável maior (colunas)
+				if(j!=matrix[0].length-1 && i!= matrix.length-1) {					
+					if (matrix[i][j]!=0) {												//sabendo que se a interseção for 0 nao incrementamos o somatorio
+						double first= (double) matrix[i][j];							//aplica-se a formula da informacao mutua
 						double second= (double) matrix[i][matrix[0].length-1];
-						double third = (double)matrix[matrix.length-1][j];
-						soma+= (first/dim) * Math.log(dim*(first/(second* third)));
+						double third = (double)matrix[matrix.length-1][j];				
+						soma+= (first/dim) * Math.log(dim*(first/(second* third)));		//incrementa-se a soma com o resultado
 					}
 				}
 			}
@@ -203,53 +203,52 @@ public class Amostra implements Serializable{
 		return soma;
 	}
 	
-// retorna as variÃ¡veis onde existe apenas um Ãºnico valor ao longo de toda a amostra
-//!!! deve dar para usar o tensor para tornar mais eficiente
+// retorna as variaveis onde existe apenas um unico valor ao longo de toda a amostra
 //O(dataDim*domain(k)*domain(0))
 	public boolean[] Alone() {
 		if(dataDim()>1) {	
 			boolean[] Alone = new boolean[dataDim()];
 			int aux;
-			for (int k = 0; k < dataDim(); k++) {
-				aux = 0;
-				for (int i = 0; i < domain(k) & aux <= 1 ; i++) {
-					boolean find = false;
+			for (int k = 0; k < dataDim(); k++) {							//para cada variavel da amostra
+				aux = 0;													//variavel que guarda quantos valores diferentes de 0 a variavel k toma
+				for (int i = 0; i < domain(k) & aux <= 1 ; i++) {			//para cada valor do seu dominio
+					boolean find = false;									
 					if (k == 0) {
-						for (int j = 0; j < domain(1) & !find; j++) {
-							if (countTensor[0][1][i][j] != 0) {
+						for (int j = 0; j < domain(1) & !find; j++) {		//excecao no caso de ser a primeira variável da amostra
+							if (countTensor[0][1][i][j] != 0) {				
 								aux++;
 								find = true;
 							}
 						}
 					} else {
-						for (int j = 0; j < domain(0) & !find; j++) {
-							if (countTensor[0][k][j][i] != 0) {
-								aux++;
+						for (int j = 0; j < domain(0) & !find; j++) {		//ver na primeira linha, coluna k
+							if (countTensor[0][k][j][i] != 0) {				//se algum dos valores de k tiver contagem !=0 para valores da variável 0, consideramos que
+								aux++;										//k assume aux+1 valores e movemo-nos para o próximo valor de k
 								find = true;
 							}
 						}
 					}
 				}
-				Alone[k] = (aux <= 1);
+				Alone[k] = (aux <= 1);										//se no fim, a variável k tiver mais que 1 valor (aux>1), a sua entrada no vetor Alone[] é false;
 			}
 			return Alone;
-		} else throw new AssertionError ("Alone: Dumb ass, you're trying to do this with just 1 atribute");
+		} else throw new AssertionError ("Alone: Impossible to do this for Sample with only 1 atribute");
 	}
 	
 //O(n*m²)
 	public void build() {
 		countTensor= new int[dataDim()-1][dataDim()][][];
-		for (int i = 0; i < dataDim()-1; i++) {
-			for (int j = i+1; j < dataDim(); j++) {
-				countTensor[i][j]= new int[domain(i)+1][domain(j)+1];
-			}
-		}
-		for (int k = 0; k < length(); k++) {
-			for (int i = 0; i < dataDim()-1; i++) {
-				for (int j = i+1; j < dataDim(); j++) {
-					countTensor[i][j][list.get(k)[i]][list.get(k)[j]]+=1;
-					countTensor[i][j][list.get(k)[i]][domain(j)]+=1;
-					countTensor[i][j][domain(i)][list.get(k)[j]]+=1;
+		for (int i = 0; i < dataDim()-1; i++) {									//inicializar as matrizes interiores do tensor com dimensão [domain(i)+1] x [domain(j)+1]
+			for (int j = i+1; j < dataDim(); j++) {								//para alem dos valores de intersecao, queremos que a ultima linha e ultima coluna sejam os 
+				countTensor[i][j]= new int[domain(i)+1][domain(j)+1];			//os valores totais de contagem de cada valor de cada variavel dessa matriz
+			}		
+		}																		//!!!So inicializamos matrizes da diagonal superior, as outras seriam redundantes
+		for (int k = 0; k < length(); k++) {									//para cada datum
+			for (int i = 0; i < dataDim()-1; i++) {								//para cada variavel
+				for (int j = i+1; j < dataDim(); j++) {							//para cada outra variavel maior que a primeira (diagonal superior)
+					countTensor[i][j][list.get(k)[i]][list.get(k)[j]]+=1;		//incrementamos a contagem correspondente da intersecao
+					countTensor[i][j][list.get(k)[i]][domain(j)]+=1;			//incrementamos a contagem total daquele valor daquela variavel
+					countTensor[i][j][domain(i)][list.get(k)[j]]+=1;			//incrementamos a contagem total daquele valor da outra variavel
 				}
 			}
 		}
@@ -315,43 +314,4 @@ public class Amostra implements Serializable{
 
 
 
-class Verify {
-	private int value;
-	private boolean isIt;
-	
-	
-	
-// CONSTRUTOR
-	
-	public Verify(int v) {
-		super();
-		value= v;
-		isIt= true;
-	}
-	
-	
-	
-// SETTER, GETTERS & TO STRING
-	
-	public boolean isAlone() {
-		return isIt;
-	}
-	
-	public int getValue() {
-		return value;
-	}
 
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-	public void setIsIt(boolean isIt) {
-		this.isIt = isIt;
-	}
-
-	@Override
-	public String toString() {
-		return "Verify [value=" + value + ", isIt=" + isIt + "]";
-	}
-
-}
