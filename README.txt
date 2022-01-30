@@ -26,8 +26,16 @@ Implementações:
 
 **APLICAÇÃO**
 
--Para correr a aplicação, deverá correr-se o ficheiro app.java; Os passos até gravar a rede de bayes são intuitivos. Depois de gravada, correr a app2.java.
--Para realizar o teste leaveOneOut completo para todos os dataSets, carregar no botão correspondente. (tempo estimado 50 segundos);
+-Para correr a aplicação, deverá correr-se o ficheiro app.java; Os passos até gravar a Rede de Bayes são intuitivos. Depois de gravada, correr a app2.java.
+-Na app.java, para gravar para outra diretoria depois da gravação para o default path, selecionar outro ficheiro da diretoria pretendida.
+-Poderá usar o botão "Show/Hide" para visualizar ou não, tanto a Sample escolhida como a Rede de Bayes gerada;
+
+-Para realizar o teste leaveOneOut para os dataSets, carregar no botão correspondente e selecionar todos os ficheiros .csv que são requeridos. (tempo total estimado para todos os dataSets 20 segundos , depende do computador);
+
+-Tendo o ficheiro .txt já guardado, poder-se-à proceder à avaliação de um vetor. Para isso, deverá selecionar o ficheiro .txt usando o botão apropriado. A seguir, usar o botão "Classify" e introduzir as entradas do vetor (note que apenas poderão ser inteiros positivos);
+
+
+
 
 
 
