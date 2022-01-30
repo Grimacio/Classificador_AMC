@@ -69,7 +69,7 @@ public class app implements Serializable{
 		frame.setResizable(false);
 		frame.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));
 		frame.setTitle("Convertor: Sample to Bayes Arborean Tree");
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Asus\\Downloads\\Picture1.png"));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("/home/gui_gaspar/eclipse-workspace/ClassificadorAMC/Webp.net-resizeimage_1.png"));
 		frame.getContentPane().setBackground(new Color(230, 230, 250));
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
@@ -93,6 +93,7 @@ public class app implements Serializable{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser2 = new JFileChooser();
 		
 		JButton Export = new JButton("Export Data");
 		Export.setBounds(10, 300, 187, 45);
@@ -101,6 +102,14 @@ public class app implements Serializable{
 		Export.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
+				if(Export.getText() =="Export to Another Directory") {
+					int r = fileChooser2.showOpenDialog((Component)e.getSource());
+					if (r==fileChooser2.APPROVE_OPTION){
+						String fileName= path.replace("\\", "/").substring(path.lastIndexOf("/"), path.indexOf(".csv")).concat(".txt");
+						path=fileChooser2.getSelectedFile().getAbsolutePath().replace("\\", "/");
+						path=path.substring(0, path.lastIndexOf("/")).concat("/"+fileName);
+					}
+				}
 				C.R.writeBayes(path.replace(".csv", ".txt"));
 				Export.setText("Export to Another Directory");
 				textArea.setText("Good to go! \n" +path.replace(".csv", ".txt"));
@@ -189,7 +198,7 @@ public class app implements Serializable{
 					sample = false;
 					bayes = false;
 					text = "";
-					textArea_1.setText(0+" ms");
+					textArea_1.setText("");
 				
 			}
 		});
@@ -215,7 +224,7 @@ public class app implements Serializable{
 		menu.setLayout(null);
 		
 		JLabel Classifier = new JLabel("");
-		Classifier.setIcon(new ImageIcon("C:\\Users\\Asus\\Downloads\\tree (1).png"));
+		Classifier.setIcon(new ImageIcon("/home/gui_gaspar/eclipse-workspace/ClassificadorAMC/tree_1.png"));
 		
 		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
@@ -265,7 +274,7 @@ public class app implements Serializable{
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\Asus\\Downloads\\Webp.net-resizeimage (1).png"));
+		lblNewLabel_1.setIcon(new ImageIcon("/home/gui_gaspar/eclipse-workspace/ClassificadorAMC/Webp.net-resizeimage_1.png"));
 		lblNewLabel_1.setBounds(565, 355, 45, 45);
 		frame.getContentPane().add(lblNewLabel_1);
 		
