@@ -75,7 +75,7 @@ public class app2 implements Serializable{
 		frmClassifier.setResizable(false);
 		frmClassifier.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));
 		frmClassifier.setTitle("Classifier");
-		frmClassifier.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"\\Picture1.png"));
+		frmClassifier.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"/Picture1.png"));
 		frmClassifier.getContentPane().setBackground(new Color(230, 230, 250));
 		frmClassifier.getContentPane().setLayout(null);
 		textArea = new JTextArea();
@@ -116,7 +116,6 @@ public class app2 implements Serializable{
 					int var = Integer.parseInt(variable);
 					vector[i] = var;
 				}
-				System.out.println(Arrays.toString(vector));
 				startTime = System.nanoTime();
 				double[] res= C.classify(vector);
 				endTime = System.nanoTime();
@@ -197,7 +196,7 @@ public class app2 implements Serializable{
 		menu.setLayout(null);
 		
 		JLabel Classifier = new JLabel("");
-		Classifier.setIcon(new ImageIcon(url+"\\lupa.png"));
+		Classifier.setIcon(new ImageIcon(url+"/lupa.png"));
 		
 		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
@@ -249,7 +248,7 @@ public class app2 implements Serializable{
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setIcon(new ImageIcon(url+"\\Webp.net-resizeimage_1.png"));
+		lblNewLabel_1.setIcon(new ImageIcon(url+"/Webp.net-resizeimage_1.png"));
 		lblNewLabel_1.setBounds(565, 294, 45, 45);
 		frmClassifier.getContentPane().add(lblNewLabel_1);
 		
