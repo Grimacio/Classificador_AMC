@@ -26,7 +26,6 @@ public class app implements Serializable{
 
 	private JFrame frame;
 	private JTextArea textArea;
-	private JTextArea textArea_1;
 	Classificador C= new Classificador();
 	String path;
 	long amostraTime=0, bayesTime=0;
@@ -36,8 +35,8 @@ public class app implements Serializable{
 	boolean show = false;
 	boolean sample = false;
 	boolean bayes = false;
-	String url;
 	String text;
+	String url = Paths.get("").toAbsolutePath().toString();
 	
 	
 	/**
@@ -68,12 +67,11 @@ public class app implements Serializable{
 	 */
 	
 	private void initialize() {	
-		url=Paths.get("").toAbsolutePath().toString();
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setFont(new Font("Dialog", Font.PLAIN, 12));
 		frame.setTitle("Convertor: Sample to Bayes Arborean Tree");
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"/Webp.net-resizeimage_1.png"));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(url+"\\Picture1.png"));
 		frame.getContentPane().setBackground(new Color(230, 230, 250));
 		frame.getContentPane().setLayout(null);
 		textArea = new JTextArea();
@@ -96,9 +94,10 @@ public class app implements Serializable{
 		frame.setBounds(100, 100, 220, 442);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser= new JFileChooser();
 		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Comma Separated Values","csv"));
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Comma Separated Values (.csv)","csv"));
+		
 		JFileChooser fileChooser2 = new JFileChooser();
 		
 		JButton Export = new JButton("Export Data");
@@ -172,7 +171,7 @@ public class app implements Serializable{
 					startTime=System.nanoTime();
 					C.A=new Amostra(path);
 					endTime=System.nanoTime();
-					ChooseSample.setText("Amostra Escolhida");
+					ChooseSample.setText("Sample Chosen");
 					ChooseSample.setEnabled(false);
 					CreateBayes.setEnabled(true);
 					amostraTime= (endTime-startTime)/1000000;
@@ -204,7 +203,7 @@ public class app implements Serializable{
 					sample = false;
 					bayes = false;
 					text = "";
-					textArea_1.setText("");
+					textArea_1.setText(0+" ms");
 				
 			}
 		});
@@ -230,7 +229,7 @@ public class app implements Serializable{
 		menu.setLayout(null);
 		
 		JLabel Classifier = new JLabel("");
-		Classifier.setIcon(new ImageIcon(url+"/tree_1.png"));
+		Classifier.setIcon(new ImageIcon(url+"\\tree_1.png"));
 		
 		Classifier.setFont(new Font("Dialog", Font.BOLD, 20));
 		Classifier.setHorizontalAlignment(SwingConstants.CENTER);
@@ -280,7 +279,7 @@ public class app implements Serializable{
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setIcon(new ImageIcon(url+ "/Webp.net-resizeimage_1.png"));
+		lblNewLabel_1.setIcon(new ImageIcon(url+"\\Webp.net-resizeimage_1.png"));
 		lblNewLabel_1.setBounds(565, 355, 45, 45);
 		frame.getContentPane().add(lblNewLabel_1);
 		
