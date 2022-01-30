@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class app2 {
 
@@ -73,6 +74,8 @@ public class app2 {
 		frame.setVisible (true);
 		
 		JFileChooser fileChooserUSED = new JFileChooser();
+		fileChooserUSED.setAcceptAllFileFilterUsed(false);
+		fileChooserUSED.addChoosableFileFilter(new FileNameExtensionFilter("text File (.txt)","txt"));
 		
 		JButton btnNewButton = new JButton("Choose Bayes");
 		btnNewButton.setBounds(63, 26, 99, 31);
@@ -132,6 +135,8 @@ public class app2 {
 		
 		frame.getContentPane().add(btnNewButton_1);
 		JFileChooser fileChooser1= new JFileChooser();
+		fileChooser1.setAcceptAllFileFilterUsed(false);
+		fileChooser1.addChoosableFileFilter(new FileNameExtensionFilter("Comma Separated Values (.csv)","csv"));
 		JButton btnLeaveoneout = new JButton("LeaveOneOut");
 		btnLeaveoneout.setBounds(362, 289, 149, 25);
 		btnLeaveoneout.addActionListener(new ActionListener() {
@@ -159,6 +164,7 @@ public class app2 {
 						ficheiros.add(s);
 					}
 				}
+				if(!ficheiros.isEmpty()) {
 					String LOOres="";
 		
 		
@@ -183,7 +189,7 @@ public class app2 {
 	
 					
 					textArea.setText(LOOres+"\n\ntempo total: "+ tempoLOO +" ms \n\n"+ dataNumber + " vetores analisados \nMedia de "+(dimNumber/ficheiros.size())+" variaveis por dataSet \nMedia de " +(domainNumber/ficheiros.size())+" valores por variavel");
-					
+				}
 			}
 		});
 		frame.getContentPane().add(btnLeaveoneout);
