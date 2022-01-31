@@ -1,5 +1,7 @@
 package projeto;
 
+
+//Apenas uma forma de juntar todas as funcoes que as interfaces graficas usam de modo a estarem melhor organizadas
 public class Classificador {
 	Amostra A;
 	Grafos G;
@@ -91,19 +93,5 @@ public class Classificador {
 		}
 
 		return (contador/A.length())*100;
-	}
-	
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-//		Classificador C= new Classificador(new Amostra("diabetes.csv"), 0.5);
-//		System.out.println(C.leaveOneOut());
-//		Classificador C= new Classificador(new Amostra("bcancer.csv"), 0.5);
-//		int[] teste= {0,0,0,0,0,0,0,0,0,0,0};
-//		C.graph();
-//		C.bayes(0.5);
-//		System.out.println("final "+(C.run(teste)==teste[teste.length-1]));
-//		System.out.println(teste[teste.length-1]);
-	
 	}
 }

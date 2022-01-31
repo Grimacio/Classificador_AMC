@@ -182,7 +182,7 @@ public class app2 implements Serializable{
 					classify = false;
 					text = "";
 					textArea_1.setText(0+" ms");
-				
+					textArea_Class.setText("");
 			}
 		});
 		
@@ -306,6 +306,8 @@ public class app2 implements Serializable{
 						ficheiros.add(s);
 					}
 				}
+				
+				if(!ficheiros.isEmpty()) {
 					String LOOres="";
 		
 		
@@ -329,7 +331,7 @@ public class app2 implements Serializable{
 					}
 					textArea_1.setText(tempoLOO +" ms");
 					textArea.setText(LOOres+"\n\n"+ dataNumber + " analyzed vectors \nAverage of "+(dimNumber/ficheiros.size())+" variables per datum set \nAverage of " +(domainNumber/ficheiros.size())+" values per variable");
-					
+				}		
 			}
 		});
 		frmClassifier.getContentPane().add(btnAccuracy);

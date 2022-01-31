@@ -301,15 +301,6 @@ public class Amostra implements Serializable{
 			e.printStackTrace();
 		}
 	}
-	
-	public static void main(String[] Args) {
-		Amostra a= new Amostra("bcancer.csv");
-		int[] v= {10,0};
-		int[] w= {0,0};
-		System.out.println(a.count(v, w));
-		System.out.println(Arrays.deepToString(a.getCountTensor()));
-	}
-	
 }
 
 
